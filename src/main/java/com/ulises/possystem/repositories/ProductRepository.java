@@ -1,6 +1,6 @@
-package com.ulises.postsystem.repositories;
+package com.ulises.possystem.repositories;
 
-import com.ulises.postsystem.entities.Product;
+import com.ulises.possystem.entities.Product;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {

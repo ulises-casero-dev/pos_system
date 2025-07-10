@@ -1,7 +1,7 @@
-package com.ulises.postsystem.services;
+package com.ulises.possystem.services;
 
-import com.ulises.postsystem.entities.Product;
-import com.ulises.postsystem.repositories.ProductRepository;
+import com.ulises.possystem.entities.Product;
+import com.ulises.possystem.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,5 +26,15 @@ public class ProductServiceManager implements ProductService{
     @Override
     public Product Save(@RequestBody Product product) {
         return this.repository.save(product);
+    }
+
+    @Override
+    public Product Update(@RequestBody Long id, Product product) {
+        Product prod = this.repository.findById(id).get();
+
+        prod.setName(product.getName());
+        prod.setPrice(product.getPrice());
+
+        return this.repository.save(prod);
     }
 }

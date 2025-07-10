@@ -1,4 +1,4 @@
-package com.ulises.postsystem.entities;
+package com.ulises.possystem.entities;
 
 import jakarta.persistence.*;
 
@@ -10,6 +10,10 @@ public class Product {
     private Long id;
     private String name;
     private Double price;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Product() {} //Siempre crear un constructor vacio
 

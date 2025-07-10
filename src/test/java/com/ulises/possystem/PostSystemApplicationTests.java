@@ -1,4 +1,4 @@
-package com.ulises.postsystem;
+package com.ulises.possystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
