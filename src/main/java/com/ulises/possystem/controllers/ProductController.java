@@ -19,7 +19,7 @@ public class ProductController {
 
     @PostMapping()
     @Transactional
-    public Product save(@RequestBody Product product){
+    public Product saveProduct(@RequestBody Product product){
         return  this.serviceManager.Save(product);
     }
 
