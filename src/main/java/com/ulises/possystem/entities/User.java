@@ -1,9 +1,8 @@
 package com.ulises.possystem.entities;
 
+import com.ulises.possystem.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.Builder;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +28,10 @@ public class User {
     @Column
     @Email
     private String email;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
     @Column
     private boolean active;
@@ -101,5 +104,21 @@ public class User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

@@ -1,6 +1,7 @@
 package com.ulises.possystem.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "order_items")
@@ -9,6 +10,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    @NotNull(message = "The quantity mos be greater than 1")
     private Integer quantity;
     @Column
     private Double unitPrice;
@@ -35,7 +37,7 @@ public class OrderItem {
 
     @PrePersist
     @PreUpdate
-    public void calculateTotalPrice(){
+    public void calculateSubTotal(){
         if(unitPrice != null && quantity != null){
             this.subTotal = this.unitPrice * this.quantity;
         } else {

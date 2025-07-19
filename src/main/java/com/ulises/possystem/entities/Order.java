@@ -1,10 +1,10 @@
 package com.ulises.possystem.entities;
 
+import com.ulises.possystem.enums.OrderState;
 import jakarta.persistence.*;
 import jakarta.persistence.OneToMany;
 
-import java.util.Date;
-import java.util.Iterator;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,7 +15,7 @@ public class Order {
     private Long id;
 
     @Column
-    private Date date;
+    private LocalDateTime date;
 
     @Column
     private Double totalPrice;
@@ -23,9 +23,10 @@ public class Order {
     @Column
     private Double totalDiscount;
 
-    @Column
-    private String state;
-    
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderState state;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -38,6 +39,7 @@ public class Order {
     public Order(Long id, User user){
         this.id = id;
         this.user = user;
+        this.totalPrice = 0.0;
     }
     
     @PrePersist
@@ -57,11 +59,11 @@ public class Order {
         return id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -81,11 +83,11 @@ public class Order {
         this.totalDiscount = totalDiscount;
     }
 
-    public String getState() {
+    public OrderState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(OrderState state) {
         this.state = state;
     }
 
