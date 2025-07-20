@@ -1,43 +1,57 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.dto.OrderDTO;
 import com.ulises.possystem.entities.Order;
 import com.ulises.possystem.repositories.OrderRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class OrderServiceManager implements OrderService {
     @Autowired
     private OrderRepository repository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public Order save(@RequestBody Order order) {
-        return this.repository.save(order);
+    public List<OrderDTO> findAll() {
+        List<Order> orders = this.repository.findAll();
+        return orders.stream()
+                .map(order -> this.modelMapper.map(order, OrderDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Order findById(Long id) {
-        return this.repository.findById(id).get();
+    public OrderDTO findById(Long id) {
+        Order orderEntity = this.repository.findById(id).
+                orElseThrow(() -> new RuntimeException("Order not found."));
+
+        return this.modelMapper.map(orderEntity, OrderDTO.class);
+    }
+    @Override
+    public OrderDTO save(OrderDTO orderDto) {
+        Order orderEntity = this.modelMapper.map(orderDto, Order.class);
+        Order savedOrder = this.repository.save(orderEntity);
+
+        return this.modelMapper.map(savedOrder, OrderDTO.class);
     }
 
     @Override
-    public List<Order> findAll() {
-        return (List<Order>) this.repository.findAll();
-    }
+    public  OrderDTO update(Long id, OrderDTO orderDto){
+        Order orderEntity = this.repository.findById(id).
+                orElseThrow(() -> new RuntimeException("Order not found."));
 
-    @Override
-    public  Order update(@RequestBody Long id, Order order){
-        Order actualOrder = this.repository.findById(id).get();
+        orderEntity.setState(orderDto.getState());
+        orderEntity.setTotalDiscount(orderDto.getTotalDiscount());
 
-        actualOrder.setState(order.getState());
-        actualOrder.setTotalPrice(order.getTotalPrice());
-        actualOrder.setTotalDiscount(order.getTotalDiscount());
-        actualOrder.setOrderItems(order.getOrderItems());
+        Order updatedOrder = this.repository.save(orderEntity);
 
-        return this.repository.save(actualOrder);
+        return this.modelMapper.map(updatedOrder, OrderDTO.class);
     }
 }
 

@@ -1,11 +1,11 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.entities.Category;
-
+import com.ulises.possystem.dto.CategoryDTO;
 import java.util.List;
+
 public interface CategoryService {
-    List<Category> findAll();
-    Category findById(Long id);
-    Category save(Category category);
-    Category update(Long id, Category category);
+    List<CategoryDTO> findAll();
+    CategoryDTO findById(Long id);
+    CategoryDTO save(CategoryDTO categorySto);
+    CategoryDTO update(Long id, CategoryDTO categoryDto);
 }

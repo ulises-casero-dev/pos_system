@@ -1,10 +1,11 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.entities.OrderItem;
+import com.ulises.possystem.dto.OrderItemDTO;
 import java.util.List;
+
 public interface OrderItemService {
-    List<OrderItem> findAll();
-    OrderItem findById(Long id);
-    OrderItem save(OrderItem orderItem);
-    OrderItem update(Long id, OrderItem orderItem);
+    List<OrderItemDTO> findAll();
+    OrderItemDTO findById(Long id);
+    OrderItemDTO save(OrderItemDTO orderItemDto);
+    OrderItemDTO update(Long id, OrderItemDTO orderItemDto);
 }

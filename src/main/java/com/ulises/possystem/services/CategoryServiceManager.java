@@ -1,39 +1,57 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.dto.CategoryDTO;
 import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.repositories.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceManager implements CategoryService{
     @Autowired
     private CategoryRepository repository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public List<Category> findAll() {
-        return (List<Category>) this.repository.findAll();
+    public List<CategoryDTO> findAll() {
+        List<Category> categories = this.repository.findAll()
+        return categories.stream()
+                .map(category -> this.modelMapper.map(category, CategoryDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Category findById(Long id) {
-        return this.repository.findById(id).get();
+    public CategoryDTO findById(Long id) {
+        Category categoryEntity = this.repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        return this.modelMapper.map(categoryEntity, CategoryDTO.class);
     }
 
     @Override
-    public Category save(@RequestBody Category category) {
-        return this.repository.save(category);
+    public CategoryDTO save(CategoryDTO categoryDto) {
+        Category categoryEntity = this.modelMapper.map(categoryDto, Category.class);
+        Category savedCategory = this.repository.save(categoryEntity);
+
+        return this.modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
-    public Category update(@RequestBody Long id, Category category) {
-        Category categoryData = this.repository.findById(id).get();
+    public CategoryDTO update(Long id, CategoryDTO categoryDto) {
+        Category categoryEntity = this.repository.findById(id)
+                .orElseThrow();
 
-        categoryData.setName(category.getName());
+        categoryEntity.setName(categoryDto.getName());
 
-        return this.repository.save(categoryData);
+        Category updatedCategory = this.repository.save(categoryEntity);
+
+        return modelMapper.map(updatedCategory, CategoryDTO.class);
     }
 }

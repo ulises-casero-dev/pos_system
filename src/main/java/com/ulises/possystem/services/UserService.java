@@ -1,12 +1,11 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.entities.User;
-
+import com.ulises.possystem.dto.UserDTO;
 import java.util.List;
 
 public interface UserService {
-    List<User> findAll();
-    User findById(Long id);
-    User save(User user);
-    User update(Long id, User user);
+    List<UserDTO> findAll();
+    UserDTO findById(Long id);
+    UserDTO save(UserDTO userDto);
+    UserDTO update(Long id, UserDTO userDto);
 }

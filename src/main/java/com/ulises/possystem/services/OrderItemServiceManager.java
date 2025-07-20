@@ -1,39 +1,53 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.dto.OrderItemDTO;
 import com.ulises.possystem.entities.OrderItem;
 import com.ulises.possystem.repositories.OrderItemRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderItemServiceManager implements OrderItemService {
     @Autowired
     private OrderItemRepository repository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public List<OrderItem> findAll() {
-        return (List<OrderItem>) this.repository.findAll();
+    public List<OrderItemDTO> findAll() {
+        List<OrderItem> orderItems = this.repository.findAll();
+        return orderItems.stream()
+                .map(orderItem -> this.modelMapper.map(orderItem, OrderItemDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public OrderItem findById(Long id) {
-        return this.repository.findById(id).get();
+    public OrderItemDTO findById(Long id) {
+        OrderItem orderItem = this.repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order item not Found."));
+        return this.modelMapper.map(orderItem, OrderItemDTO.class);
     }
 
     @Override
-    public OrderItem save(@RequestBody OrderItem orderItem) {
-        return this.repository.save(orderItem);
+    public OrderItemDTO save(OrderItemDTO orderItemDto) {
+        OrderItem orderItem = this.modelMapper.map(orderItemDto, OrderItem.class);
+        OrderItem savedOrderItem = this.repository.save(orderItem);
+        return this.modelMapper.map(savedOrderItem, OrderItemDTO.class);
     }
 
     @Override
-    public OrderItem update(@RequestBody Long id, OrderItem orderItem) {
-        OrderItem orderItemData = this.repository.findById(id).get();
+    public OrderItemDTO update(Long id, OrderItemDTO orderItemDto) {
+        OrderItem orderItemEntity = this.repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order item not Found."));
 
-        orderItemData.setQuantity(orderItem.getQuantity());
+        orderItemEntity.setQuantity(orderItemDto.getQuantity());
 
-        return this.repository.save(orderItemData);
+        OrderItem savedOrderItem = this.repository.save(orderItemEntity);
+        return this.modelMapper.map(savedOrderItem, OrderItemDTO.class);
     }
 }
