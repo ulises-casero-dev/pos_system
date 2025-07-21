@@ -1,8 +1,8 @@
-# POS System - Punto de Venta para Supermercado
+# POS System - Supermarket Point of Sale
 
-Este proyecto es una aplicación backend desarrollada con **Java y Spring Boot**, orientada a simular el sistema de registro y cobro de compras en un supermercado. Incluye la gestión de roles de usuario y lógica de descuentos.
+This project is a backend application developed with **Java and Spring Boot**, designed to simulate the checkout and purchase registration system in a supermarket. It includes user role management and discount logic.
 
-## Tecnologías utilizadas
+## Technologies Used
 
 - Java 17
 - Spring Boot
@@ -11,22 +11,22 @@ Este proyecto es una aplicación backend desarrollada con **Java y Spring Boot**
 - Maven
 - Git / GitHub
 
-## Funcionalidades previstas
+## Planned Features
 
-- Registro de usuarios y roles: cliente, empleado, supervisor
-- Gestión de productos y stock
-- Registro de compras
-- Aplicación de descuentos:
-  - Clientes: descuentos por día
-  - Empleados: 10% fijo en todas sus compras
-- Control de acceso por rol
-- Documentación de API con Swagger (opcional)
+- User and role registration: customer, employee, supervisor
+- Product and stock management
+- Purchase registration
+- Discount application:
+  - Customers: day-based discounts
+  - Employees: fixed 10% discount on all purchases
+- Role-based access control
+- API documentation with Swagger (optional)
 
-## Estado del proyecto
+## Project Status
 
-🛠 En desarrollo activo.  
-Actualmente en fase de definición de entidades y lógica de negocio.
+🛠 Actively in development.  
+Currently defining entities and business logic.
 
-## Objetivo
+## Purpose
 
-Este proyecto forma parte de mi portfolio personal como desarrollador backend, y busca aplicar conocimientos de Java, Spring Boot y modelado de negocio en un entorno práctico.
+This project is part of my personal portfolio as a backend developer, aiming to apply knowledge of Java, Spring Boot, and business modeling in a practical environment.
