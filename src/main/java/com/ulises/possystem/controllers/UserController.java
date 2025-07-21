@@ -1,9 +1,8 @@
 package com.ulises.possystem.controllers;
 
-import com.ulises.possystem.entities.Category;
-import com.ulises.possystem.entities.User;
-import com.ulises.possystem.services.CategoryServiceManager;
+import com.ulises.possystem.dto.UserDTO;
 import com.ulises.possystem.services.UserServiceManager;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,39 +19,38 @@ public class UserController {
     private UserServiceManager serviceManager;
 
     @GetMapping()
-    @Transactional(readOnly = true)
-    public List<User> findAllUsers(){
-        return  this.serviceManager.findAll();
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
+        return  ResponseEntity.ok(serviceManager.findAll());
     }
 
     @GetMapping("/{id}")
-    @Transactional(readOnly = true)
-    public User getUserById(@PathVariable Long id){
-        return this.serviceManager.findById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
+        try {
+            UserDTO userDto = this.serviceManager.findById(id);
+            return ResponseEntity.ok(userDto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping()
-    @Transactional
-    public User saveUser(@RequestBody User user){
-        return this.serviceManager.save(user);
+    public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO user){
+        try {
+            UserDTO userDto = this.serviceManager.save(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<?> updateUser(@PathVariable Long id,
-                                            @RequestBody User user){
-        Optional<User> userData = Optional.of(this.serviceManager.findById(id));
-
-        if(userData.isPresent()){
-            User userToUpdate = userData.get();
-            userToUpdate.setName(user.getName());
-            userToUpdate.setSurname(user.getSurname());
-            userToUpdate.setCelphone(user.getCelphone());
-
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(this.serviceManager.update(id,userToUpdate));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,
+                                              @Valid @RequestBody UserDTO user){
+        try {
+            UserDTO userDto = this.serviceManager.update(id,user);
+            return ResponseEntity.ok(userDto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 }
