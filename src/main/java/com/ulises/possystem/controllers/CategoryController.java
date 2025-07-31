@@ -1,11 +1,11 @@
 package com.ulises.possystem.controllers;
 
-import com.ulises.possystem.entities.Category;
+import com.ulises.possystem.dto.CategoryDTO;
 import com.ulises.possystem.services.CategoryServiceManager;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,37 +18,25 @@ public class CategoryController {
     private CategoryServiceManager serviceManager;
 
     @GetMapping()
-    @Transactional(readOnly = true)
-    public List<Category> findAllCategories(){
-        return  this.serviceManager.findAll();
+    public ResponseEntity<List<CategoryDTO>> findAllCategories(){
+        return  ResponseEntity.ok(this.serviceManager.findAll());
     }
 
     @GetMapping("/{id}")
-    @Transactional(readOnly = true)
-    public Category getCategoryById(@PathVariable Long id){
-        return this.serviceManager.findById(id);
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id){
+        return ResponseEntity.ok(this.serviceManager.findById(id));
     }
 
     @PostMapping()
-    @Transactional
-    public Category saveCategory(@RequestBody Category category){
-        return this.serviceManager.save(category);
+    public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryDTO category){
+        CategoryDTO categoryDto = this.serviceManager.save(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryDto);
     }
 
     @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<?> updateCategory(@PathVariable Long id,
-                                            @RequestBody Category category){
-        Optional<Category> categoryData = Optional.of(this.serviceManager.findById(id));
-
-        if(categoryData.isPresent()){
-            Category categoryToUpdate = categoryData.get();
-            categoryToUpdate.setName(category.getName());
-
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(this.serviceManager.update(id,categoryToUpdate));
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id,
+                                            @Valid @RequestBody CategoryDTO category){
+        CategoryDTO categoryDto = this.serviceManager.update(id, category);
+        return ResponseEntity.ok(categoryDto);
     }
 }

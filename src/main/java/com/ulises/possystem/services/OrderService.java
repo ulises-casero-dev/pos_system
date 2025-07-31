@@ -11,4 +11,5 @@ public interface OrderService {
     OrderDTO findById(Long id);
     OrderDTO save(OrderDTO orderDto);
     OrderDTO update(Long id, OrderDTO orderDto);
+    OrderDTO cancelOrder(Long id);
 }

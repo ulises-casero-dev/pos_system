@@ -2,6 +2,7 @@ package com.ulises.possystem.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "products")
@@ -15,6 +16,11 @@ public class Product {
     @Column
     @NotNull
     private Double price;
+
+    @Column
+    @NotNull
+    @ColumnDefault("true")
+    private boolean active = true;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -47,5 +53,17 @@ public class Product {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public boolean getActive(){ return this.active; }
+
+    public void setActive(boolean active) { this.active = active; }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

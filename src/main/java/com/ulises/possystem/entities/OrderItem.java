@@ -16,6 +16,8 @@ public class OrderItem {
     private Double unitPrice;
     @Column
     private Double subTotal;
+    @Column
+    private boolean cancelated;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -88,4 +90,8 @@ public class OrderItem {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    public boolean getCancelated() { return this.cancelated; }
+
+    public void setCancelated(boolean cancelated) { this.cancelated = cancelated; }
 }

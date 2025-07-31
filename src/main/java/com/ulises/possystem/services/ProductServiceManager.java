@@ -2,6 +2,7 @@ package com.ulises.possystem.services;
 
 import com.ulises.possystem.dto.ProductDTO;
 import com.ulises.possystem.entities.Product;
+import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,21 @@ public class ProductServiceManager implements ProductService{
     @Override
     public ProductDTO findById(Long id) {
         Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));;
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));;
         return this.modelMapper.map(product, ProductDTO.class);
     }
 
     @Override
-    public ProductDTO Save(ProductDTO productDto) {
+    public ProductDTO save(ProductDTO productDto) {
         Product productEntity = this.modelMapper.map(productDto, Product.class);
         Product saveProduct = this.repository.save(productEntity);
         return this.modelMapper.map(saveProduct, ProductDTO.class);
     }
 
     @Override
-    public ProductDTO Update(Long id, ProductDTO productDto) {
+    public ProductDTO update(Long id, ProductDTO productDto) {
         Product product = this.repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
 
         product.setName(productDto.getName());
@@ -52,5 +53,29 @@ public class ProductServiceManager implements ProductService{
 
        Product saveProduct = this.repository.save(product);
        return this.modelMapper.map(saveProduct, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO deactivate(Long id) {
+        Product productEntity = this.repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
+
+        productEntity.setActive(false);
+
+        Product productUpdated = this.repository.save(productEntity);
+
+        return this.modelMapper.map(productUpdated, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO activate(Long id) {
+        Product productEntity = this.repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
+
+        productEntity.setActive(true);
+
+        Product productUpdated = this.repository.save(productEntity);
+
+        return this.modelMapper.map(productUpdated, ProductDTO.class);
     }
 }

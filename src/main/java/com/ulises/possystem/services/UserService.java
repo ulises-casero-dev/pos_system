@@ -8,4 +8,6 @@ public interface UserService {
     UserDTO findById(Long id);
     UserDTO save(UserDTO userDto);
     UserDTO update(Long id, UserDTO userDto);
+    UserDTO deactivate(Long id);
+    UserDTO activate(Long id);
 }

@@ -2,6 +2,7 @@ package com.ulises.possystem.services;
 
 import com.ulises.possystem.dto.CategoryDTO;
 import com.ulises.possystem.entities.Category;
+import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CategoryServiceManager implements CategoryService{
 
     @Override
     public List<CategoryDTO> findAll() {
-        List<Category> categories = this.repository.findAll()
+        List<Category> categories = this.repository.findAll();
         return categories.stream()
                 .map(category -> this.modelMapper.map(category, CategoryDTO.class))
                 .collect(Collectors.toList());
@@ -30,7 +31,7 @@ public class CategoryServiceManager implements CategoryService{
     @Override
     public CategoryDTO findById(Long id) {
         Category categoryEntity = this.repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         return this.modelMapper.map(categoryEntity, CategoryDTO.class);
     }
@@ -46,12 +47,36 @@ public class CategoryServiceManager implements CategoryService{
     @Override
     public CategoryDTO update(Long id, CategoryDTO categoryDto) {
         Category categoryEntity = this.repository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         categoryEntity.setName(categoryDto.getName());
 
         Category updatedCategory = this.repository.save(categoryEntity);
 
         return modelMapper.map(updatedCategory, CategoryDTO.class);
+    }
+
+    @Override
+    public CategoryDTO deactivate(Long id){
+        Category categoryEntity = this.repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
+
+        categoryEntity.setActive(false);
+
+        Category updateCategory = this.repository.save(categoryEntity);
+
+        return modelMapper.map(updateCategory, CategoryDTO.class);
+    }
+
+    @Override
+    public CategoryDTO activate(Long id){
+        Category categoryEntity = this.repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
+
+        categoryEntity.setActive(true);
+
+        Category updateCategory = this.repository.save(categoryEntity);
+
+        return this.modelMapper.map(updateCategory, CategoryDTO.class);
     }
 }

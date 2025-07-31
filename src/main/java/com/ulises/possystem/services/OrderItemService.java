@@ -8,4 +8,5 @@ public interface OrderItemService {
     OrderItemDTO findById(Long id);
     OrderItemDTO save(OrderItemDTO orderItemDto);
     OrderItemDTO update(Long id, OrderItemDTO orderItemDto);
+    OrderItemDTO cancelOrderItem(Long id);
 }

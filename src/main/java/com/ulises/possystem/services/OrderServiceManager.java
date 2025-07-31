@@ -2,7 +2,9 @@ package com.ulises.possystem.services;
 
 import com.ulises.possystem.dto.OrderDTO;
 import com.ulises.possystem.entities.Order;
+import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.OrderRepository;
+import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ public class OrderServiceManager implements OrderService {
     @Override
     public OrderDTO findById(Long id) {
         Order orderEntity = this.repository.findById(id).
-                orElseThrow(() -> new RuntimeException("Order not found."));
+                orElseThrow(() -> new ResourceNotFoundException("Order not found."));
 
         return this.modelMapper.map(orderEntity, OrderDTO.class);
     }
@@ -42,9 +44,9 @@ public class OrderServiceManager implements OrderService {
     }
 
     @Override
-    public  OrderDTO update(Long id, OrderDTO orderDto){
+    public  OrderDTO update(Long id, OrderDTO orderDto) {
         Order orderEntity = this.repository.findById(id).
-                orElseThrow(() -> new RuntimeException("Order not found."));
+                orElseThrow(() -> new ResourceNotFoundException("Order not found."));
 
         orderEntity.setState(orderDto.getState());
         orderEntity.setTotalDiscount(orderDto.getTotalDiscount());
@@ -52,6 +54,18 @@ public class OrderServiceManager implements OrderService {
         Order updatedOrder = this.repository.save(orderEntity);
 
         return this.modelMapper.map(updatedOrder, OrderDTO.class);
+    }
+
+    @Override
+    public OrderDTO cancelOrder(Long id)  {
+        Order orderEntity = this.repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
+
+        orderEntity.setCancelated(true);
+
+        Order orderCanceled = this.repository.save(orderEntity);
+
+        return this.modelMapper.map(orderCanceled, OrderDTO.class);
     }
 }
 

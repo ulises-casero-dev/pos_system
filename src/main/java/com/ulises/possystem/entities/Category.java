@@ -17,6 +17,10 @@ public class Category {
     @NotNull
     private String name;
 
+    @Column
+    @NotNull
+    private boolean active;
+
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
@@ -25,6 +29,7 @@ public class Category {
     public Category(Long id, String name){
         this.id = id;
         this.name = name;
+        this.active = true;
     }
 
     public Long getId() {
@@ -38,6 +43,10 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+    public  boolean getActive() { return this.active; }
+
+    public  void setActive(boolean active) { this.active = active; }
 
     @JsonIgnore
     public List<Product> getProducts() {

@@ -1,6 +1,7 @@
 package com.ulises.possystem.entities;
 
 import com.ulises.possystem.enums.OrderState;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.persistence.OneToMany;
 
@@ -22,6 +23,10 @@ public class Order {
 
     @Column
     private Double totalDiscount;
+
+    @Column
+    @Nullable
+    private boolean cancelated = false;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -106,4 +111,8 @@ public class Order {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public boolean getCancelated() { return this.cancelated; }
+
+    public void setCancelated(boolean cancelated) { this.cancelated = cancelated; }
 }
