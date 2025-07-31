@@ -2,8 +2,10 @@ package com.ulises.possystem.services;
 
 import com.ulises.possystem.dto.ProductCreateDTO;
 import com.ulises.possystem.dto.ProductDTO;
+import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.exception.ResourceNotFoundException;
+import com.ulises.possystem.repositories.CategoryRepository;
 import com.ulises.possystem.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +16,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceManager implements ProductService{
-    @Autowired // Inyecta una instancia de la clase, es un atributo mas de la clase, se accede con this.
-    private ProductRepository repository;
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Override
     public List<ProductDTO> findAll() {
-        List<Product> products = repository.findAll();
+        List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(product -> this.modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
@@ -30,7 +35,7 @@ public class ProductServiceManager implements ProductService{
 
     @Override
     public ProductDTO findById(Long id) {
-        Product product = repository.findById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));;
         return this.modelMapper.map(product, ProductDTO.class);
     }
@@ -38,13 +43,20 @@ public class ProductServiceManager implements ProductService{
     @Override
     public ProductDTO save(ProductCreateDTO productCreateDto) {
         Product productEntity = this.modelMapper.map(productCreateDto, Product.class);
-        Product saveProduct = this.repository.save(productEntity);
+
+        Category category = this.categoryRepository.findById(productCreateDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+
+        productEntity.setCategory(category);
+
+        Product saveProduct = this.productRepository.save(productEntity);
+
         return this.modelMapper.map(saveProduct, ProductDTO.class);
     }
 
     @Override
     public ProductDTO update(Long id, ProductDTO productDto) {
-        Product product = this.repository.findById(id)
+        Product product = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
 
@@ -52,30 +64,30 @@ public class ProductServiceManager implements ProductService{
         product.setPrice(productDto.getPrice());
 
 
-       Product saveProduct = this.repository.save(product);
+       Product saveProduct = this.productRepository.save(product);
        return this.modelMapper.map(saveProduct, ProductDTO.class);
     }
 
     @Override
     public ProductDTO deactivate(Long id) {
-        Product productEntity = this.repository.findById(id)
+        Product productEntity = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
         productEntity.setActive(false);
 
-        Product productUpdated = this.repository.save(productEntity);
+        Product productUpdated = this.productRepository.save(productEntity);
 
         return this.modelMapper.map(productUpdated, ProductDTO.class);
     }
 
     @Override
     public ProductDTO activate(Long id) {
-        Product productEntity = this.repository.findById(id)
+        Product productEntity = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
         productEntity.setActive(true);
 
-        Product productUpdated = this.repository.save(productEntity);
+        Product productUpdated = this.productRepository.save(productEntity);
 
         return this.modelMapper.map(productUpdated, ProductDTO.class);
     }
