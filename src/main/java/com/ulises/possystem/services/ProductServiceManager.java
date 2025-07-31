@@ -1,5 +1,6 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.dto.ProductCreateDTO;
 import com.ulises.possystem.dto.ProductDTO;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.exception.ResourceNotFoundException;
@@ -35,8 +36,8 @@ public class ProductServiceManager implements ProductService{
     }
 
     @Override
-    public ProductDTO save(ProductDTO productDto) {
-        Product productEntity = this.modelMapper.map(productDto, Product.class);
+    public ProductDTO save(ProductCreateDTO productCreateDto) {
+        Product productEntity = this.modelMapper.map(productCreateDto, Product.class);
         Product saveProduct = this.repository.save(productEntity);
         return this.modelMapper.map(saveProduct, ProductDTO.class);
     }

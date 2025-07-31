@@ -1,5 +1,6 @@
 package com.ulises.possystem.controllers;
 
+import com.ulises.possystem.dto.ProductCreateDTO;
 import com.ulises.possystem.dto.ProductDTO;
 import com.ulises.possystem.services.ProductServiceManager;
 import jakarta.validation.Valid;
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<ProductDTO> saveProduct(@Valid  @RequestBody ProductDTO product){
+    public ResponseEntity<ProductDTO> saveProduct(@Valid  @RequestBody ProductCreateDTO product){
         ProductDTO productDto = this.serviceManager.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
     }
