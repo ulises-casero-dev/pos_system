@@ -1,4 +1,4 @@
-package com.ulises.possystem.dto;
+package com.ulises.possystem.dto.orderItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,10 +1,9 @@
-package com.ulises.possystem.dto;
+package com.ulises.possystem.dto.product;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-public class ProductCreateDTO {
+public class ProductUpdateDTO {
     private String name;
     private Double price;
     private Long categoryId;

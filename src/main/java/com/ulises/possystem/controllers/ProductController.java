@@ -1,7 +1,8 @@
 package com.ulises.possystem.controllers;
 
-import com.ulises.possystem.dto.ProductCreateDTO;
-import com.ulises.possystem.dto.ProductDTO;
+import com.ulises.possystem.dto.product.ProductCreateDTO;
+import com.ulises.possystem.dto.product.ProductDTO;
+import com.ulises.possystem.dto.product.ProductUpdateDTO;
 import com.ulises.possystem.services.ProductServiceManager;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,21 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> Update(@PathVariable Long id,
-                                             @RequestBody ProductDTO product) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id,
+                                             @RequestBody ProductUpdateDTO product) {
         ProductDTO productDto = this.serviceManager.update(id, product);
         return ResponseEntity.ok(productDto);
+    }
+
+    @PutMapping("activate/{id}")
+    public ResponseEntity<ProductDTO> activate(@PathVariable Long id) {
+        ProductDTO activatedProduct = this.serviceManager.activate(id);
+        return  ResponseEntity.ok(activatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProductDTO> delete(@PathVariable Long id){
+        ProductDTO deletedProduct = this.serviceManager.deactivate(id);
+        return  ResponseEntity.ok(deletedProduct);
     }
 }

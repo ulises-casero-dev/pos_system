@@ -1,6 +1,7 @@
 package com.ulises.possystem.controllers;
 
-import com.ulises.possystem.dto.OrderDTO;
+import com.ulises.possystem.dto.order.OrderCreateDTO;
+import com.ulises.possystem.dto.order.OrderDTO;
 import com.ulises.possystem.services.OrderServiceManager;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class OrderController {
     }
 
     @PostMapping()
-    public ResponseEntity<OrderDTO> saveOrder(@Valid @RequestBody OrderDTO order){
+    public ResponseEntity<OrderDTO> saveOrder(@Valid @RequestBody OrderCreateDTO order){
         OrderDTO orderDto = this.serviceManager.save(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
     }

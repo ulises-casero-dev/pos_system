@@ -2,6 +2,7 @@ package com.ulises.possystem.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "order_items")
@@ -16,7 +17,8 @@ public class OrderItem {
     private Double unitPrice;
     @Column
     private Double subTotal;
-    @Column
+    @NotNull
+    @ColumnDefault("false")
     private boolean cancelated;
 
     @ManyToOne
@@ -50,6 +52,8 @@ public class OrderItem {
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id) { this.id = id; }
 
     public Integer getQuantity() {
         return quantity;

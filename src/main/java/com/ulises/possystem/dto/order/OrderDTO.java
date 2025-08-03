@@ -1,10 +1,10 @@
-package com.ulises.possystem.dto;
+package com.ulises.possystem.dto.order;
 
 import java.time.LocalDateTime;
+
+import com.ulises.possystem.dto.orderItem.OrderItemDTO;
 import com.ulises.possystem.enums.OrderState;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 

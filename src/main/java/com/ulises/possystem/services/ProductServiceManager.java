@@ -1,7 +1,8 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.dto.ProductCreateDTO;
-import com.ulises.possystem.dto.ProductDTO;
+import com.ulises.possystem.dto.product.ProductCreateDTO;
+import com.ulises.possystem.dto.product.ProductDTO;
+import com.ulises.possystem.dto.product.ProductUpdateDTO;
 import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.exception.ResourceNotFoundException;
@@ -55,16 +56,23 @@ public class ProductServiceManager implements ProductService{
     }
 
     @Override
-    public ProductDTO update(Long id, ProductDTO productDto) {
-        Product product = this.productRepository.findById(id)
+    public ProductDTO update(Long id, ProductUpdateDTO productDto) {
+        Product productEntity = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
 
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
+        productEntity.setName(productDto.getName());
+        productEntity.setPrice(productDto.getPrice());
+
+        if (productDto.getCategoryId() != null) {
+            Category category = this.categoryRepository.findById(productDto.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+
+            productEntity.setCategory(category);
+        }
 
 
-       Product saveProduct = this.productRepository.save(product);
+       Product saveProduct = this.productRepository.save(productEntity);
        return this.modelMapper.map(saveProduct, ProductDTO.class);
     }
 

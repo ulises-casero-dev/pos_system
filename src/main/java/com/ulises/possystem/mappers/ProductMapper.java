@@ -1,7 +1,7 @@
 package com.ulises.possystem.mappers;
 
-import com.ulises.possystem.dto.ProductCreateDTO;
-import com.ulises.possystem.dto.ProductDTO;
+import com.ulises.possystem.dto.product.ProductCreateDTO;
+import com.ulises.possystem.dto.product.ProductDTO;
 import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Product;
 import jakarta.annotation.PostConstruct;
