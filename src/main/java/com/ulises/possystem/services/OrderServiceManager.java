@@ -2,11 +2,13 @@ package com.ulises.possystem.services;
 
 import com.ulises.possystem.dto.order.OrderCreateDTO;
 import com.ulises.possystem.dto.order.OrderDTO;
+import com.ulises.possystem.dto.orderItem.OrderItemCreateDTO;
 import com.ulises.possystem.dto.orderItem.OrderItemDTO;
 import com.ulises.possystem.entities.Order;
 import com.ulises.possystem.entities.OrderItem;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.entities.User;
+import com.ulises.possystem.enums.OrderState;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.OrderRepository;
 import com.ulises.possystem.repositories.ProductRepository;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +51,7 @@ public class OrderServiceManager implements OrderService {
 
         return this.modelMapper.map(orderEntity, OrderDTO.class);
     }
+
     @Override
     public OrderDTO save(OrderCreateDTO orderCreateDto) {
         Order orderEntity = new Order();
@@ -55,32 +59,28 @@ public class OrderServiceManager implements OrderService {
         User user = this.userRepository.findById(orderCreateDto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
-        List<OrderItemDTO> orderItems = orderCreateDto.getOrderItems().stream()
-                .map(itemDto -> {
-                    Product product = this.productRepository.findById(itemDto.getProductId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
-
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(orderEntity);
-                    orderItem.setProduct(product);
-                    orderItem.setQuantity(itemDto.getQuantity());
-                    orderItem.setUnitPrice(itemDto.getUnitPrice());
-                    orderItem.setSubTotal(itemDto.getUnitPrice() * itemDto.getQuantity());
-
-                    return itemDto;
-                }).collect(Collectors.toList());
-
-        Double totalPrice = orderItems.stream()
-                .mapToDouble(OrderItemDTO::getSubTotal)
-                .sum();
-
         orderEntity.setUser(user);
         orderEntity.setDate(LocalDateTime.now());
-        orderEntity.setTotalPrice(totalPrice);
-        //orderEntity.setOrderItems(orderItems);
 
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItemCreateDTO orderItemDto : orderCreateDto.getOrderItems()) {
+            Product product = this.productRepository.findById(orderItemDto.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
-        //Order orderEntity = this.modelMapper.map(orderDto, Order.class);
+            OrderItem orderItemEntity = new OrderItem();
+
+            orderItemEntity.setOrder(orderEntity);
+            orderItemEntity.setProduct(product);
+            orderItemEntity.setQuantity(orderItemDto.getQuantity());
+            orderItemEntity.setUnitPrice(product.getPrice());
+            orderItemEntity.calculateSubTotal();
+
+            orderItems.add(orderItemEntity);
+        }
+
+        orderEntity.setOrderItems(orderItems);
+
+        orderEntity.setState(OrderState.CREATED);
         Order savedOrder = this.repository.save(orderEntity);
 
         return this.modelMapper.map(savedOrder, OrderDTO.class);

@@ -60,25 +60,6 @@ public class OrderItemServiceManager implements OrderItemService {
     }
 
     @Override
-    public OrderItemDTO save(OrderItemCreateDTO orderItemDto) {
-        OrderItem orderItemEntity = new OrderItem();
-
-        Product product = this.productRepository.findById(orderItemDto.getProductId())
-                .orElseThrow(()-> new ResourceNotFoundException("Prodcut not found."));
-
-        Order order = this.orderRepository.findById(orderItemDto.getOrderId())
-                .orElseThrow(() -> new ResourceNotFoundException("ORder not found."));
-
-        orderItemEntity.setProduct(product);
-        orderItemEntity.setOrder(order);
-        orderItemEntity.setUnitPrice(product.getPrice());
-        orderItemEntity.setQuantity(orderItemDto.getQuantity());
-
-        OrderItem savedOrderItem = this.repository.save(orderItemEntity);
-        return this.modelMapper.map(savedOrderItem, OrderItemDTO.class);
-    }
-
-    @Override
     public OrderItemDTO update(Long id, OrdetItemUpdateDTO orderItemDto) {
         OrderItem orderItemEntity = this.repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order item not Found."));

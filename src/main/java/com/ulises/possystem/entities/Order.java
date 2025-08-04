@@ -1,11 +1,15 @@
 package com.ulises.possystem.entities;
 
 import com.ulises.possystem.enums.OrderState;
+import com.ulises.possystem.enums.UserType;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.persistence.OneToMany;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,9 +39,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
     
     public Order(){}
     
@@ -50,10 +54,34 @@ public class Order {
     @PrePersist
     @PreUpdate
     public void calculateTotalPrice(){
-        if (orderItems != null) {
-            for (OrderItem item : orderItems) {
-                this.totalPrice += item.getSubTotal();
-            }    
+        if (this.orderItems != null) {
+            Double totalPrice = 0.0;
+            Double totalDiscount = 0.0;
+            for (OrderItem item : this.orderItems) {
+                totalPrice += item.getSubTotal();
+            }
+
+            totalDiscount = totalPrice;
+            if (this.user.getUserType() == UserType.CUSTOMER) {
+                totalPrice *= 0.90;
+                totalDiscount -= totalPrice;
+            } else if (this.user.getUserType() == UserType.EMPLOYEE) {
+                totalPrice *= 0.85;
+                totalDiscount -= totalPrice;;
+            }
+
+            totalPrice = BigDecimal.valueOf(totalPrice)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
+
+            totalDiscount = BigDecimal.valueOf(totalDiscount)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
+
+
+            this.totalPrice = totalPrice;
+            this.totalDiscount = totalDiscount;
+
         } else {
             this.totalPrice = 0.0;
         }

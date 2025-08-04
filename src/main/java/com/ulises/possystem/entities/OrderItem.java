@@ -37,6 +37,7 @@ public class OrderItem {
         this.unitPrice = unitPrice;
         this.order = order;
         this.product = product;
+        this.subTotal = unitPrice * quantity;
     }
 
     @PrePersist

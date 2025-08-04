@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrderService {
     List<OrderDTO> findAll();
     OrderDTO findById(Long id);
-    OrderDTO save(OrderCreateDTO orderDto);
+    OrderDTO save(OrderCreateDTO orderCreateDto);
     OrderDTO update(Long id, OrderDTO orderDto);
     OrderDTO cancelOrder(Long id);
 }
