@@ -1,6 +1,6 @@
 package com.ulises.possystem.mappers;
 
-import com.ulises.possystem.dto.UserDTO;
+import com.ulises.possystem.dto.user.UserDTO;
 import com.ulises.possystem.entities.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

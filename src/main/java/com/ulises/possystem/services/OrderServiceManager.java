@@ -3,7 +3,6 @@ package com.ulises.possystem.services;
 import com.ulises.possystem.dto.order.OrderCreateDTO;
 import com.ulises.possystem.dto.order.OrderDTO;
 import com.ulises.possystem.dto.orderItem.OrderItemCreateDTO;
-import com.ulises.possystem.dto.orderItem.OrderItemDTO;
 import com.ulises.possystem.entities.Order;
 import com.ulises.possystem.entities.OrderItem;
 import com.ulises.possystem.entities.Product;

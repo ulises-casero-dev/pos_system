@@ -33,11 +33,6 @@ public class OrderItemController {
         return ResponseEntity.ok(this.serviceManager.findById(id));
     }
 
-    @PostMapping()
-    public ResponseEntity<OrderItemDTO> saveOrderItem(@Valid @RequestBody OrderItemCreateDTO orderItem){
-        return ResponseEntity.ok(this.serviceManager.save(orderItem));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<OrderItemDTO> updateOrderItem(@PathVariable Long id,
                                                         @Valid @RequestBody OrdetItemUpdateDTO orderItem){

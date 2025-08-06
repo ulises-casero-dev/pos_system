@@ -1,12 +1,13 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.dto.UserDTO;
+import com.ulises.possystem.dto.user.UserCreateDTO;
+import com.ulises.possystem.dto.user.UserDTO;
+import com.ulises.possystem.dto.user.UserUpdateDTO;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Fallback;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,24 +39,32 @@ public class UserServiceManager implements UserService{
     }
 
     @Override
-    public UserDTO save(UserDTO userDto){
-        User user = this.modelMapper.map(userDto, User.class);
+    public UserDTO save(UserCreateDTO userDto){
+        User user = new User();
+
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setCelphone(userDto.getPhone());
+        user.setEmail(userDto.getEmail());
+        user.setMemberIdentification(userDto.getIdentification());
+        user.setUserType(userDto.getUserType());
+
         User savedUser = this.repository.save(user);
 
         return this.modelMapper.map(savedUser, UserDTO.class);
     }
 
     @Override
-    public UserDTO update(Long id, UserDTO userDto) {
-        User userDB = repository.findById(id)
+    public UserDTO update(Long id, UserUpdateDTO userDto) {
+        User userEntity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
-        userDB.setName(userDto.getName());
-        userDB.setSurname(userDto.getSurname());
-        userDB.setCelphone(userDto.getCelphone());
-        userDB.setEmail(userDto.getEmail());
+        userEntity.setName(userDto.getName());
+        userEntity.setSurname(userDto.getSurname());
+        userEntity.setEmail(userDto.getEmail());
+        userEntity.setCelphone(userDto.getPhone());
 
-        User updatedUser = repository.save(userDB);
+        User updatedUser = repository.save(userEntity);
         return  modelMapper.map(updatedUser, UserDTO.class);
     }
 

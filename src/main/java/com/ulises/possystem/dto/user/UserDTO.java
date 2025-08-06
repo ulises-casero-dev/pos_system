@@ -1,4 +1,4 @@
-package com.ulises.possystem.dto;
+package com.ulises.possystem.dto.user;
 
 import com.ulises.possystem.enums.UserType;
 import lombok.AllArgsConstructor;
