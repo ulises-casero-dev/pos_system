@@ -3,6 +3,7 @@ package com.ulises.possystem.entities;
 import com.ulises.possystem.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 
@@ -28,6 +29,10 @@ public class User {
     @Column
     @Email
     private String email;
+
+    @Column
+    @ColumnDefault("0.0")
+    private Double discountAcumulated;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

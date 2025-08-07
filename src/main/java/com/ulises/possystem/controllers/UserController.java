@@ -23,6 +23,16 @@ public class UserController {
         return  ResponseEntity.ok(this.serviceManager.findAll());
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<UserDTO>> getAllActiveUsers(){
+        return  ResponseEntity.ok(this.serviceManager.findAllActiveUsers());
+    }
+
+    @GetMapping("/deactive")
+    public ResponseEntity<List<UserDTO>> findAllDeactiveUsers(){
+        return  ResponseEntity.ok(this.serviceManager.findAllDeactiveUsers());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
         return ResponseEntity.ok(this.serviceManager.findById(id));
@@ -39,5 +49,17 @@ public class UserController {
                                               @Valid @RequestBody UserUpdateDTO user){
         UserDTO userDto = this.serviceManager.update(id, user);
         return ResponseEntity.ok(userDto);
+    }
+
+    @PatchMapping("deactivate/{id}")
+    public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
+        this.serviceManager.deactivate(id);
+        return ResponseEntity.ok("User deactivated.");
+    }
+
+    @PatchMapping("activate/{id}")
+    public ResponseEntity<String> activateUser(@PathVariable Long id) {
+        this.serviceManager.activate(id);
+        return ResponseEntity.ok("User activated.");
     }
 }

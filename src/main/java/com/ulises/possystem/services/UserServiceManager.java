@@ -9,6 +9,7 @@ import com.ulises.possystem.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,24 @@ public class UserServiceManager implements UserService{
     @Override
     public List<UserDTO> findAll(){
         List<User> users = this.repository.findAll();
+
+        return users.stream()
+                .map(user -> this.modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> findAllActiveUsers(){
+        List<User> users = this.repository.findByActiveTrue();
+
+        return users.stream()
+                .map(user -> this.modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> findAllDeactiveUsers(){
+        List<User> users = this.repository.findByActiveFalse();
 
         return users.stream()
                 .map(user -> this.modelMapper.map(user, UserDTO.class))
@@ -68,27 +87,15 @@ public class UserServiceManager implements UserService{
         return  modelMapper.map(updatedUser, UserDTO.class);
     }
 
+    @Transactional
     @Override
-    public UserDTO deactivate(Long id) {
-        User userEntity = this.repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-
-        userEntity.setActive(false);
-
-        User userUpdated = this.repository.save(userEntity);
-
-        return this.modelMapper.map(userUpdated, UserDTO.class);
+    public void deactivate(Long id) {
+        this.repository.UpdateActiveStatus(id, false);
     }
 
+    @Transactional
     @Override
-    public UserDTO activate(Long id) {
-        User userEntity = this.repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-
-        userEntity.setActive(true);
-
-        User userUpdated = this.repository.save(userEntity);
-
-        return this.modelMapper.map(userUpdated, UserDTO.class);
+    public void activate(Long id) {
+        this.repository.UpdateActiveStatus(id, true);
     }
 }
