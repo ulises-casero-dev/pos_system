@@ -21,7 +21,7 @@ public class DiscountCreateDTO {
         return amount;
     }
 
-    public boolean isGeneral() {
+    public boolean getIsGeneral() {
         return isGeneral;
     }
 

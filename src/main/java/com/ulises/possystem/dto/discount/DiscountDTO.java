@@ -2,7 +2,7 @@ package com.ulises.possystem.dto.discount;
 
 import com.ulises.possystem.enums.UserType;
 
-public class DiscountResponseDTO {
+public class DiscountDTO {
     private String desctiprion;
     private Double amount;
     private boolean isGeneral;

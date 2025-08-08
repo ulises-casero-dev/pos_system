@@ -66,11 +66,11 @@ public class Discount {
         this.amount = amount;
     }
 
-    public boolean isIdGeneral() {
+    public boolean isIsGeneral() {
         return isGeneral;
     }
 
-    public void setIdGeneral(boolean idGeneral) {
+    public void setIsGeneral(boolean idGeneral) {
         this.isGeneral = idGeneral;
     }
 
