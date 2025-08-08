@@ -2,6 +2,8 @@ package com.ulises.possystem.entities;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "employee_discount_usages")
 public class EmployeeDiscountUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

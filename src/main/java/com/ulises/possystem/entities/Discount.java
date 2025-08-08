@@ -4,6 +4,8 @@ import com.ulises.possystem.enums.UserType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
+@Entity
+@Table(name = "discounts")
 public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +19,9 @@ public class Discount {
     private Double amount;
     @Column(nullable = false)
     @ColumnDefault("false")
-    private boolean idGeneral;
+    private boolean isGeneral;
     @Column(nullable = false)
-    private Double limit;
+    private Double limitAmount;
     @Enumerated(EnumType.STRING)
     @Column(name = "aplicative_user_type")
     private UserType aplicativeUserType;
@@ -65,19 +67,19 @@ public class Discount {
     }
 
     public boolean isIdGeneral() {
-        return idGeneral;
+        return isGeneral;
     }
 
     public void setIdGeneral(boolean idGeneral) {
-        this.idGeneral = idGeneral;
+        this.isGeneral = idGeneral;
     }
 
     public Double getLimit() {
-        return limit;
+        return limitAmount;
     }
 
     public void setLimit(Double limit) {
-        this.limit = limit;
+        this.limitAmount = limit;
     }
 
     public UserType getAplicativeUserType() {

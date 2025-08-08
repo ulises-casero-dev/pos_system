@@ -8,6 +8,7 @@ import com.ulises.possystem.entities.OrderItem;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.OrderState;
+import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.OrderRepository;
 import com.ulises.possystem.repositories.ProductRepository;
@@ -75,6 +76,21 @@ public class OrderServiceManager implements OrderService {
             orderItemEntity.calculateSubTotal();
 
             orderItems.add(orderItemEntity);
+        }
+
+        //Funcion aplicadora de descuento?
+        //Aplicar descuento
+        if(user.getUserType() == UserType.EMPLOYEE){
+            //Obtengo descuento empleado
+            // compruebo cantidad acumulada en descuentos para ese empleado
+            //Si cantidad no supera monto:
+                //Aplicao descuento empleado, si llega al limite el descuento se aplica hasta cantiadad permitida
+            //Si alcanzo monto, no aplica descuento
+        } else { // Camino  de cliente
+            //Obtener si existe descuento activo
+            //Si existe desceunto y aplica a la compra:
+                //Aplicar descuento hasta cantidad permitida
+            //Si no existe descuento no se hace nada
         }
 
         orderEntity.setOrderItems(orderItems);
