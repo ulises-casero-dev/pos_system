@@ -83,7 +83,7 @@ public class DiscountServiceManager implements DiscountService{
         Discount discountEntity = this.discountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
 
-        discountEntity.setDescription(discountUpdateDto.getDesctiprion());
+        discountEntity.setDescription(discountUpdateDto.getDescription());
         discountEntity.setAmount(discountUpdateDto.getAmount());
         discountEntity.setLimitAmount(discountUpdateDto.getLimitAmount());
 
