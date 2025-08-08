@@ -2,10 +2,11 @@ package com.ulises.possystem.dto.discount;
 
 import com.ulises.possystem.enums.UserType;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 public class DiscountCreateDTO {
-    private String desctiprion;
+    private String description;
     private Double amount;
     private boolean isGeneral;
     private Double limitAmount;
@@ -13,8 +14,38 @@ public class DiscountCreateDTO {
     private Long categoryId;
     private Long productId;
 
-    public String getDesctiprion() {
-        return desctiprion;
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public void setGeneral(boolean general) {
+        isGeneral = general;
+    }
+
+    public void setLimitAmount(Double limitAmount) {
+        this.limitAmount = limitAmount;
+    }
+
+    public void setAplicativeUserType(UserType aplicativeUserType) {
+        this.aplicativeUserType = aplicativeUserType;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Double getAmount() {

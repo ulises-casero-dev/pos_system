@@ -66,7 +66,7 @@ public class Discount {
         this.amount = amount;
     }
 
-    public boolean isIsGeneral() {
+    public boolean getIsGeneral() {
         return isGeneral;
     }
 
@@ -74,11 +74,11 @@ public class Discount {
         this.isGeneral = idGeneral;
     }
 
-    public Double getLimit() {
+    public Double getLimitAmount() {
         return limitAmount;
     }
 
-    public void setLimit(Double limit) {
+    public void setLimitAmount(Double limit) {
         this.limitAmount = limit;
     }
 

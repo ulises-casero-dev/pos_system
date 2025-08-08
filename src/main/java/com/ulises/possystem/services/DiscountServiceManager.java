@@ -52,9 +52,12 @@ public class DiscountServiceManager implements DiscountService{
     public DiscountDTO save(DiscountCreateDTO createDto) {
         Discount newDiscount = new Discount();
 
-        newDiscount.setDescription(createDto.getDesctiprion());
+        System.out.println("LimitAmount recibido: " + createDto.getLimitAmount());
+
+        newDiscount.setDescription(createDto.getDescription());
+        newDiscount.setAmount(createDto.getAmount());
         newDiscount.setIsGeneral(createDto.getIsGeneral());
-        newDiscount.setLimit(createDto.getLimitAmount());
+        newDiscount.setLimitAmount(createDto.getLimitAmount());
         newDiscount.setAplicativeUserType(createDto.getAplicativeUserType());
 
         if (createDto.getCategoryId() != null) {
@@ -76,17 +79,52 @@ public class DiscountServiceManager implements DiscountService{
     }
 
     @Override
-    public DiscountDTO update(DiscountUpdateDTO discountUpdateDto) {
-        return null;
+    public DiscountDTO update(Long id, DiscountUpdateDTO discountUpdateDto) {
+        Discount discountEntity = this.discountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
+
+        discountEntity.setDescription(discountUpdateDto.getDesctiprion());
+        discountEntity.setAmount(discountUpdateDto.getAmount());
+        discountEntity.setLimitAmount(discountUpdateDto.getLimitAmount());
+
+        if(discountUpdateDto.getCategoryId() != null) {
+            Category category = this.categoryRepository.findById(discountUpdateDto.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
+            discountEntity.setCategory(category);
+        }
+
+        if(discountUpdateDto.getProductId() != null) {
+            Product product = this.productRepository.findById(discountUpdateDto.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
+            discountEntity.setProduct(product);
+        }
+
+        Discount updatedDiscount = this.discountRepository.save(discountEntity);
+
+        return this.modelMapper.map(updatedDiscount, DiscountDTO.class);
     }
 
     @Override
     public DiscountDTO deactivateDiscount(Long id) {
-        return null;
+        Discount discountEntity = this.discountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
+
+        discountEntity.setActive(false);
+
+        Discount updatedDiscount = this.discountRepository.save(discountEntity);
+
+        return this.modelMapper.map(updatedDiscount, DiscountDTO.class);
     }
 
     @Override
     public DiscountDTO activateDiscount(Long id) {
-        return null;
+        Discount discountEntity = this.discountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
+
+        discountEntity.setActive(true);
+
+        Discount updatedDiscount = this.discountRepository.save(discountEntity);
+
+        return this.modelMapper.map(updatedDiscount, DiscountDTO.class);
     }
 }
