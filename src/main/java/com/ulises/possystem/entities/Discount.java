@@ -1,5 +1,6 @@
 package com.ulises.possystem.entities;
 
+import com.ulises.possystem.enums.DiscountType;
 import com.ulises.possystem.enums.UserType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,13 +19,10 @@ public class Discount {
     @Column(nullable = false)
     private Double amount;
     @Column(nullable = false)
-    @ColumnDefault("false")
-    private boolean isGeneral;
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType;
     @Column(nullable = false)
     private Double limitAmount;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "aplicative_user_type")
-    private UserType aplicativeUserType;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -32,7 +30,8 @@ public class Discount {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Discount() {}
+    public Discount() {
+    }
 
     public Long getId() {
         return id;
@@ -66,12 +65,12 @@ public class Discount {
         this.amount = amount;
     }
 
-    public boolean getIsGeneral() {
-        return isGeneral;
+    public DiscountType getDiscountType() {
+        return discountType;
     }
 
-    public void setIsGeneral(boolean idGeneral) {
-        this.isGeneral = idGeneral;
+    public void setDiscountType(DiscountType type) {
+        this.discountType = type;
     }
 
     public Double getLimitAmount() {
@@ -81,15 +80,6 @@ public class Discount {
     public void setLimitAmount(Double limit) {
         this.limitAmount = limit;
     }
-
-    public UserType getAplicativeUserType() {
-        return aplicativeUserType;
-    }
-
-    public void setAplicativeUserType(UserType aplicativeUserType) {
-        this.aplicativeUserType = aplicativeUserType;
-    }
-
     public Category getCategory() {
         return category;
     }
@@ -105,4 +95,5 @@ public class Discount {
     public void setProduct(Product product) {
         this.product = product;
     }
+
 }

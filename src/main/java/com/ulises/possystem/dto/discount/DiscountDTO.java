@@ -77,4 +77,9 @@ public class DiscountDTO {
     public void setProductId(Long productId) {
         this.productId = productId;
     }
+
+    public Double applyDiscount(Double amount) {
+        Double totalWithDiscount = amount - ((this.amount * amount) / 100);
+        return totalWithDiscount;
+    }
 }

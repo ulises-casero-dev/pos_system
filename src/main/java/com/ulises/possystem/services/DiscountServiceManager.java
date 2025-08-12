@@ -6,6 +6,8 @@ import com.ulises.possystem.dto.discount.DiscountUpdateDTO;
 import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Discount;
 import com.ulises.possystem.entities.Product;
+import com.ulises.possystem.enums.DiscountType;
+import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
 import com.ulises.possystem.repositories.DiscountRepository;
@@ -41,6 +43,14 @@ public class DiscountServiceManager implements DiscountService{
     }
 
     @Override
+    public List<DiscountDTO> findByDiscountType(DiscountType discountType){
+        List<Discount> discounts = this.discountRepository.findByDiscountType(discountType);
+        return discounts.stream()
+                .map(discount -> this.modelMapper.map(discount, DiscountDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public DiscountDTO findById(Long id) {
         Discount discountEntity = this.discountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Discount not found"));
@@ -56,9 +66,8 @@ public class DiscountServiceManager implements DiscountService{
 
         newDiscount.setDescription(createDto.getDescription());
         newDiscount.setAmount(createDto.getAmount());
-        newDiscount.setIsGeneral(createDto.getIsGeneral());
+        newDiscount.setDiscountType(createDto.getDiscountType());
         newDiscount.setLimitAmount(createDto.getLimitAmount());
-        newDiscount.setAplicativeUserType(createDto.getAplicativeUserType());
 
         if (createDto.getCategoryId() != null) {
             Category category = categoryRepository.findById(createDto.getCategoryId())
