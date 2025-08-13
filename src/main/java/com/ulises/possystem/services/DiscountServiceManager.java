@@ -62,8 +62,6 @@ public class DiscountServiceManager implements DiscountService{
     public DiscountDTO save(DiscountCreateDTO createDto) {
         Discount newDiscount = new Discount();
 
-        System.out.println("LimitAmount recibido: " + createDto.getLimitAmount());
-
         newDiscount.setDescription(createDto.getDescription());
         newDiscount.setAmount(createDto.getAmount());
         newDiscount.setDiscountType(createDto.getDiscountType());

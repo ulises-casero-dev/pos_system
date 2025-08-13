@@ -12,6 +12,8 @@ import com.ulises.possystem.enums.DiscountType;
 import com.ulises.possystem.enums.OrderState;
 import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.ResourceNotFoundException;
+import com.ulises.possystem.helper.ItemsDiscountResult;
+import com.ulises.possystem.helper.UserDiscountResult;
 import com.ulises.possystem.repositories.OrderRepository;
 import com.ulises.possystem.repositories.ProductRepository;
 import com.ulises.possystem.repositories.UserRepository;
@@ -41,6 +43,14 @@ public class OrderServiceManager implements OrderService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    /*private UserDiscountResult applyUserDiscount() {
+
+    }
+
+    private ItemsDiscountResult applyItemsDiscunts() {
+
+    }*/
 
     @Override
     public List<OrderDTO> findAll() {
@@ -101,12 +111,26 @@ public class OrderServiceManager implements OrderService {
                 subTotal = product.getPrice() * orderItemDto.getQuantity();
             }
 
-
             orderItemEntity.setSubTotal(subTotal);
             totalPrice += subTotal;;
 
             orderItems.add(orderItemEntity);
         }
+
+        List<DiscountDTO> userDiscounts = new ArrayList<>();
+        if (user.getUserType() == UserType.EMPLOYEE) {
+            userDiscounts = this.discountServiceManager.findByDiscountType(DiscountType.EMPLOYEE);
+        } else {
+            userDiscounts = this.discountServiceManager.findByDiscountType(DiscountType.CUSTOMER);
+        }
+
+        if(userDiscounts != null) {
+            for (DiscountDTO discount : userDiscounts) {
+                totalDiscount += totalPrice - discount.applyDiscount(totalPrice);
+                totalPrice = discount.applyDiscount(totalPrice);
+            }
+        }
+
 
         orderEntity.setOrderItems(orderItems);
         orderEntity.setTotalPrice(totalPrice);
