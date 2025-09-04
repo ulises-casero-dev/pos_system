@@ -11,4 +11,7 @@ public interface EmployeeDiscountUsageRepository extends JpaRepository<EmployeeD
     @Modifying
     @Query("UPDATE EmployeeDiscountUsage e SET e.active = false WHERE e.id = :id")
     EmployeeDiscountUsage deactivate(Long id);
+
+    @Query("SELECT e FROM EmployeeDiscountUsage e WHERE e.employee.id = :id")
+    EmployeeDiscountUsage getByEmployeeId(Long id);
 }

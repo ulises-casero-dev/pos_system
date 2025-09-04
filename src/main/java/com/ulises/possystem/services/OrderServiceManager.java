@@ -1,5 +1,6 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.dto.EmployeeDiscountUsageDTO;
 import com.ulises.possystem.dto.discount.DiscountDTO;
 import com.ulises.possystem.dto.order.OrderCreateDTO;
 import com.ulises.possystem.dto.order.OrderDTO;
@@ -42,6 +43,9 @@ public class OrderServiceManager implements OrderService {
     private DiscountServiceManager discountServiceManager;
 
     @Autowired
+    private EmployeeDiscountUsageServiceManager employeeDiscountUsageServiceManager;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     private UserDiscountResult applyUserDiscount(User user, Double totalPrice) {
@@ -58,6 +62,19 @@ public class OrderServiceManager implements OrderService {
 
         Double totalWithDiscount = discountDto.applyDiscount(totalPrice);
         Double totalDiscount = totalPrice - totalWithDiscount;
+
+        if (user.getUserType() == UserType.EMPLOYEE) {
+            EmployeeDiscountUsageDTO dto = new EmployeeDiscountUsageDTO();
+            System.out.println("ENTRA EN EL PRIMER IF");
+            if (totalDiscount < discountDto.getLimitAmount()) {
+                System.out.println("ENTRA EN EL SEGUNDO IF");
+                dto.setAcumulatedAmount(totalDiscount);
+                System.out.println("PRE UPDATE - DESCUENTO: "+ dto.getAcumulatedAmount());
+                employeeDiscountUsageServiceManager.update(user.getId(), dto);
+                System.out.println("POST UPDATE");
+                return new UserDiscountResult(totalDiscount, totalWithDiscount);
+            }
+        }
 
         return new UserDiscountResult(totalDiscount, totalWithDiscount);
     }

@@ -7,6 +7,7 @@ import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.EmployeeDiscountUsageRepository;
 import com.ulises.possystem.repositories.UserRepository;
+import jakarta.persistence.Entity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,11 +59,11 @@ public class EmployeeDiscountUsageServiceManager implements EmployeeDiscountUsag
 
     @Override
     public EmployeeDiscountUsageDTO update(Long id, EmployeeDiscountUsageDTO dto){
-        System.out.println("El monto a aumentar es: "+ dto.getAcumulatedAmount());
-        EmployeeDiscountUsage entity = this.employeeDiscountUsageRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee discoun amount not found"));
+        EmployeeDiscountUsage entity = this.employeeDiscountUsageRepository.getByEmployeeId(id);
 
         if (entity.isActive()) {
+            System.out.println("ENTIDAD ACTIVA");
+            System.out.println("DESCUENTO ACUMULADO: "+ entity.getAcumulatedAmount()+" - MONTO DE AUMENTO: "+ dto.getAcumulatedAmount());
             entity.setAcumulatedAmount((entity.getAcumulatedAmount() + dto.getAcumulatedAmount()));
             EmployeeDiscountUsage updatedEntity = this.employeeDiscountUsageRepository.save(entity);
             return this.modelMapper.map(updatedEntity, EmployeeDiscountUsageDTO.class);

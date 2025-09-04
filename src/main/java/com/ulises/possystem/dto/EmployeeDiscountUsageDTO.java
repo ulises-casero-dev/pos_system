@@ -1,8 +1,10 @@
 package com.ulises.possystem.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeDiscountUsageDTO {
     private Long id;
     private Long employeeId;
