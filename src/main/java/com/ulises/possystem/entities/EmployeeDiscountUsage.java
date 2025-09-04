@@ -1,6 +1,8 @@
 package com.ulises.possystem.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "employee_discount_usages")
@@ -10,9 +12,14 @@ public class EmployeeDiscountUsage {
     private Long id;
     @ManyToOne
     @JoinColumn(name="employee_id")
-    private User employeeM;
-    @Column(nullable = false)
-    private Double acumulatedAmount;
+    private User employee;
+    @Column
+    @ColumnDefault("0.00")
+    private Double acumulatedAmount = 0.00;
+
+    @Column
+    @ColumnDefault("true")
+    private boolean active = true;
 
     public EmployeeDiscountUsage() {}
 
@@ -24,12 +31,12 @@ public class EmployeeDiscountUsage {
         this.id = id;
     }
 
-    public User getEmployeeM() {
-        return employeeM;
+    public User getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeM(User employeeM) {
-        this.employeeM = employeeM;
+    public void setEmployee(User employee) {
+        this.employee = employee;
     }
 
     public Double getAcumulatedAmount() {
@@ -38,5 +45,13 @@ public class EmployeeDiscountUsage {
 
     public void setAcumulatedAmount(Double acumulatedAmount) {
         this.acumulatedAmount = acumulatedAmount;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

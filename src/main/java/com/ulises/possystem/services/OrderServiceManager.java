@@ -44,13 +44,68 @@ public class OrderServiceManager implements OrderService {
     @Autowired
     private ModelMapper modelMapper;
 
-    /*private UserDiscountResult applyUserDiscount() {
+    private UserDiscountResult applyUserDiscount(User user, Double totalPrice) {
+        List<DiscountDTO> userDiscounts = (user.getUserType() == UserType.EMPLOYEE)
+                ? this.discountServiceManager.findByDiscountType(DiscountType.EMPLOYEE)
+                : this.discountServiceManager.findByDiscountType(DiscountType.CUSTOMER);
 
+
+        if (userDiscounts == null) {
+            return new UserDiscountResult(0.0, totalPrice);
+        }
+
+        DiscountDTO discountDto = userDiscounts.get(0);
+
+        Double totalWithDiscount = discountDto.applyDiscount(totalPrice);
+        Double totalDiscount = totalPrice - totalWithDiscount;
+
+        return new UserDiscountResult(totalDiscount, totalWithDiscount);
     }
 
-    private ItemsDiscountResult applyItemsDiscunts() {
+    private ItemsDiscountResult applyItemsDiscunts(OrderCreateDTO orderCreateDto, Order order) {
+        List<DiscountDTO> GeneralDiscounts = this.discountServiceManager.findByDiscountType(DiscountType.GENERAL);
 
-    }*/
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        Double totalDiscount = 0.0;
+        Double totalPrice = 0.0;
+
+        for (OrderItemCreateDTO orderItemDto : orderCreateDto.getOrderItems()) {
+            Product product = this.productRepository.findById(orderItemDto.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
+
+            OrderItem orderItemEntity = new OrderItem();
+
+            orderItemEntity.setOrder(order);
+            orderItemEntity.setProduct(product);
+            orderItemEntity.setQuantity(orderItemDto.getQuantity());
+            orderItemEntity.setUnitPrice(product.getPrice());
+
+            Optional<DiscountDTO> productDiscount = GeneralDiscounts.stream()
+                    .filter(discount -> discount.getProductId() != null && discount.getProductId().equals(product.getId()))
+                    .findFirst();
+
+            Double subTotal;
+
+            if (productDiscount.isPresent()) {
+                DiscountDTO discount = productDiscount.get();
+                Double discountUnitPrice = discount.applyDiscount(product.getPrice());
+                totalDiscount += (product.getPrice() - discountUnitPrice) * orderItemDto.getQuantity();
+                subTotal = discountUnitPrice * orderItemDto.getQuantity();
+            } else {
+                subTotal = product.getPrice() * orderItemDto.getQuantity();
+            }
+
+            orderItemEntity.setSubTotal(subTotal);
+            totalPrice += subTotal;
+
+            orderItems.add(orderItemEntity);
+        }
+
+        order.setOrderItems(orderItems);
+
+        return new ItemsDiscountResult(totalDiscount, totalPrice);
+    }
 
     @Override
     public List<OrderDTO> findAll() {
@@ -78,62 +133,16 @@ public class OrderServiceManager implements OrderService {
         orderEntity.setUser(user);
         orderEntity.setDate(LocalDateTime.now());
 
-        List<DiscountDTO> GeneralDiscounts = this.discountServiceManager.findByDiscountType(DiscountType.GENERAL);
+        ItemsDiscountResult itemsDiscountResult = applyItemsDiscunts(orderCreateDto, orderEntity);
 
-        List<OrderItem> orderItems = new ArrayList<>();
+        UserDiscountResult userDiscountResult = applyUserDiscount(user, itemsDiscountResult.getTotalAfterItemsDiscounts());
 
-        Double totalDiscount = 0.0;
-        Double totalPrice = 0.0;
+        Double totalDiscount = itemsDiscountResult.getItemsDiscountAmount();
 
-        for (OrderItemCreateDTO orderItemDto : orderCreateDto.getOrderItems()) {
-            Product product = this.productRepository.findById(orderItemDto.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
-
-            OrderItem orderItemEntity = new OrderItem();
-
-            orderItemEntity.setOrder(orderEntity);
-            orderItemEntity.setProduct(product);
-            orderItemEntity.setQuantity(orderItemDto.getQuantity());
-            orderItemEntity.setUnitPrice(product.getPrice());
-
-            Optional<DiscountDTO> productDiscount = GeneralDiscounts.stream()
-                    .filter(discount -> discount.getProductId() != null && discount.getProductId().equals(product.getId()))
-                    .findFirst();
-
-            Double subTotal;
-
-            if (productDiscount.isPresent()) {
-                DiscountDTO discount = productDiscount.get();
-                Double discountUnitPrice = discount.applyDiscount(product.getPrice());
-                totalDiscount += (product.getPrice() - discountUnitPrice) * orderItemDto.getQuantity();
-                subTotal = discountUnitPrice * orderItemDto.getQuantity();
-            } else {
-                subTotal = product.getPrice() * orderItemDto.getQuantity();
-            }
-
-            orderItemEntity.setSubTotal(subTotal);
-            totalPrice += subTotal;;
-
-            orderItems.add(orderItemEntity);
-        }
-
-        List<DiscountDTO> userDiscounts = new ArrayList<>();
-        if (user.getUserType() == UserType.EMPLOYEE) {
-            userDiscounts = this.discountServiceManager.findByDiscountType(DiscountType.EMPLOYEE);
-        } else {
-            userDiscounts = this.discountServiceManager.findByDiscountType(DiscountType.CUSTOMER);
-        }
-
-        if(userDiscounts != null) {
-            for (DiscountDTO discount : userDiscounts) {
-                totalDiscount += totalPrice - discount.applyDiscount(totalPrice);
-                totalPrice = discount.applyDiscount(totalPrice);
-            }
-        }
+        totalDiscount += userDiscountResult.getUserDiscountAmount();
 
 
-        orderEntity.setOrderItems(orderItems);
-        orderEntity.setTotalPrice(totalPrice);
+        orderEntity.setTotalPrice(userDiscountResult.getTotalAfterUserDiscount());
         orderEntity.setTotalDiscount(totalDiscount);
 
         orderEntity.setState(OrderState.CREATED);
