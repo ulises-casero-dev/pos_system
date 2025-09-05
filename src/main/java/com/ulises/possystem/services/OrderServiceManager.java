@@ -1,6 +1,7 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.dto.EmployeeDiscountUsageDTO;
+import com.ulises.possystem.discount.service.DiscountServiceManager;
+import com.ulises.possystem.discount.strategy.DiscountStrategy;
 import com.ulises.possystem.dto.discount.DiscountDTO;
 import com.ulises.possystem.dto.order.OrderCreateDTO;
 import com.ulises.possystem.dto.order.OrderDTO;
@@ -11,7 +12,6 @@ import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.DiscountType;
 import com.ulises.possystem.enums.OrderState;
-import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.helper.ItemsDiscountResult;
 import com.ulises.possystem.helper.UserDiscountResult;
@@ -24,9 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,36 +42,22 @@ public class OrderServiceManager implements OrderService {
     private DiscountServiceManager discountServiceManager;
 
     @Autowired
-    private EmployeeDiscountUsageServiceManager employeeDiscountUsageServiceManager;
-
-    @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private Map<String, DiscountStrategy> discountStrategies;
+
     private UserDiscountResult applyUserDiscount(User user, BigDecimal totalPrice) {
-        List<DiscountDTO> userDiscounts = (user.getUserType() == UserType.EMPLOYEE)
-                ? this.discountServiceManager.findByDiscountType(DiscountType.EMPLOYEE)
-                : this.discountServiceManager.findByDiscountType(DiscountType.CUSTOMER);
 
+        String strategyKey = user.getUserType().name().toLowerCase(Locale.ROOT) + "DiscountStratrgy";
 
-        if (userDiscounts == null) {
-            return new UserDiscountResult(BigDecimal.valueOf(0.00), totalPrice);
+        DiscountStrategy strategy = discountStrategies.get(strategyKey);
+
+        if (strategy == null) {
+            return new UserDiscountResult(BigDecimal.ZERO, totalPrice);
         }
 
-        DiscountDTO discountDto = userDiscounts.get(0);
-
-        BigDecimal totalWithDiscount = discountDto.applyDiscount(totalPrice);
-        BigDecimal totalDiscount = totalPrice.subtract(totalWithDiscount);
-
-        if (user.getUserType() == UserType.EMPLOYEE) {
-            EmployeeDiscountUsageDTO dto = new EmployeeDiscountUsageDTO();
-            if (totalDiscount.compareTo(discountDto.getLimitAmount()) < 0) {
-                dto.setAcumulatedAmount(totalDiscount);
-                employeeDiscountUsageServiceManager.update(user.getId(), dto);
-                return new UserDiscountResult(totalDiscount, totalWithDiscount);
-            }
-        }
-
-        return new UserDiscountResult(totalDiscount, totalWithDiscount);
+        return strategy.applyDiscount(user, totalPrice);
     }
 
     private ItemsDiscountResult applyItemsDiscunts(OrderCreateDTO orderCreateDto, Order order) {
@@ -81,8 +65,8 @@ public class OrderServiceManager implements OrderService {
 
         List<OrderItem> orderItems = new ArrayList<>();
 
-        BigDecimal totalDiscount = BigDecimal.valueOf(0.00);
-        BigDecimal totalPrice = BigDecimal.valueOf(0.00);
+        BigDecimal totalDiscount = BigDecimal.ZERO;
+        BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (OrderItemCreateDTO orderItemDto : orderCreateDto.getOrderItems()) {
             Product product = this.productRepository.findById(orderItemDto.getProductId())
@@ -99,7 +83,7 @@ public class OrderServiceManager implements OrderService {
                     .filter(discount -> discount.getProductId() != null && discount.getProductId().equals(product.getId()))
                     .findFirst();
 
-            BigDecimal subTotal;
+            BigDecimal subTotal = BigDecimal.ZERO;
 
             if (productDiscount.isPresent()) {
                 DiscountDTO discount = productDiscount.get();

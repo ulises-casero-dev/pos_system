@@ -1,4 +1,4 @@
-package com.ulises.possystem.services;
+package com.ulises.possystem.discount.service;
 
 import com.ulises.possystem.dto.EmployeeDiscountUsageDTO;
 

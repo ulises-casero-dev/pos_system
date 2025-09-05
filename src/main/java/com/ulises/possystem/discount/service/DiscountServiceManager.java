@@ -1,4 +1,4 @@
-package com.ulises.possystem.services;
+package com.ulises.possystem.discount.service;
 
 import com.ulises.possystem.dto.discount.DiscountCreateDTO;
 import com.ulises.possystem.dto.discount.DiscountDTO;
@@ -7,7 +7,6 @@ import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Discount;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.enums.DiscountType;
-import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
 import com.ulises.possystem.repositories.DiscountRepository;
