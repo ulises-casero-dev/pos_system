@@ -3,12 +3,14 @@ package com.ulises.possystem.dto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDiscountUsageDTO {
     private Long id;
     private Long employeeId;
-    private Double acumulatedAmount;
+    private BigDecimal acumulatedAmount;
     private boolean active;
 
     public Long getId() {
@@ -27,11 +29,11 @@ public class EmployeeDiscountUsageDTO {
         this.employeeId = id;
     }
 
-    public Double getAcumulatedAmount() {
+    public BigDecimal getAcumulatedAmount() {
         return acumulatedAmount;
     }
 
-    public void setAcumulatedAmount(Double acumulatedAmount) {
+    public void setAcumulatedAmount(BigDecimal acumulatedAmount) {
         this.acumulatedAmount = acumulatedAmount;
     }
 

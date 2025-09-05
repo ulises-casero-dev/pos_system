@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "employee_discount_usages")
 public class EmployeeDiscountUsage {
@@ -15,7 +17,7 @@ public class EmployeeDiscountUsage {
     private User employee;
     @Column
     @ColumnDefault("0.00")
-    private Double acumulatedAmount = 0.00;
+    private BigDecimal acumulatedAmount = BigDecimal.valueOf(0.00);
 
     @Column
     @ColumnDefault("true")
@@ -39,11 +41,11 @@ public class EmployeeDiscountUsage {
         this.employee = employee;
     }
 
-    public Double getAcumulatedAmount() {
+    public BigDecimal getAcumulatedAmount() {
         return acumulatedAmount;
     }
 
-    public void setAcumulatedAmount(Double acumulatedAmount) {
+    public void setAcumulatedAmount(BigDecimal acumulatedAmount) {
         this.acumulatedAmount = acumulatedAmount;
     }
 

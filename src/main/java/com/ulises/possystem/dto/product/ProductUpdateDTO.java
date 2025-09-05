@@ -2,17 +2,19 @@ package com.ulises.possystem.dto.product;
 
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 public class ProductUpdateDTO {
     private String name;
-    private Double price;
+    private BigDecimal price;
     private Long categoryId;
 
     public String getName() {
         return this.name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return this.price;
     }
 

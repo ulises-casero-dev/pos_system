@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Entity
 @Table(name = "order_items")
 public class OrderItem {
@@ -14,9 +17,9 @@ public class OrderItem {
     @NotNull(message = "The quantity mos be greater than 1")
     private Integer quantity;
     @Column
-    private Double unitPrice;
+    private BigDecimal unitPrice;
     @Column
-    private Double subTotal;
+    private BigDecimal subTotal;
     @NotNull
     @ColumnDefault("false")
     private boolean cancelated;
@@ -31,22 +34,23 @@ public class OrderItem {
 
     public  OrderItem() {}
 
-    public OrderItem(Long id, Integer quantity, Double unitPrice, Order order, Product product){
+    public OrderItem(Long id, Integer quantity, BigDecimal unitPrice, Order order, Product product){
         this.id = id;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.order = order;
         this.product = product;
-        this.subTotal = unitPrice * quantity;
+        this.subTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
     @PrePersist
     @PreUpdate
     public void calculateSubTotal(){
         if(unitPrice != null && quantity != null){
-            this.subTotal = this.unitPrice * this.quantity;
+            this.subTotal = this.unitPrice.multiply(BigDecimal.valueOf(this.quantity))
+                    .setScale(2, RoundingMode.HALF_EVEN);
         } else {
-            this.subTotal = 0.0;
+            this.subTotal = BigDecimal.valueOf(0.00);
         }
     }
 
@@ -64,19 +68,19 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Double getSubTotal() {
+    public BigDecimal getSubTotal() {
         return subTotal;
     }
 
-    public void setSubTotal(Double subTotal) {
+    public void setSubTotal(BigDecimal subTotal) {
         this.subTotal = subTotal;
     }
 

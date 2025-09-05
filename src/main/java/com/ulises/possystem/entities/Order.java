@@ -1,13 +1,11 @@
 package com.ulises.possystem.entities;
 
 import com.ulises.possystem.enums.OrderState;
-import com.ulises.possystem.enums.UserType;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.persistence.OneToMany;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +21,10 @@ public class Order {
     private LocalDateTime date;
 
     @Column
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     @Column
-    private Double totalDiscount;
+    private BigDecimal totalDiscount;
 
     @Column
     @Nullable
@@ -48,7 +46,7 @@ public class Order {
     public Order(Long id, User user){
         this.id = id;
         this.user = user;
-        this.totalPrice = 0.0;
+        this.totalPrice = BigDecimal.valueOf(0.00);
     }
 
     public Long getId() {
@@ -65,19 +63,19 @@ public class Order {
         this.date = date;
     }
 
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public Double getTotalDiscount() {
+    public BigDecimal getTotalDiscount() {
         return totalDiscount;
     }
 
-    public void setTotalDiscount(Double totalDiscount) {
+    public void setTotalDiscount(BigDecimal totalDiscount) {
         this.totalDiscount = totalDiscount;
     }
 

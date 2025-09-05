@@ -3,12 +3,15 @@ package com.ulises.possystem.dto.discount;
 import com.ulises.possystem.enums.DiscountType;
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @AllArgsConstructor
 public class DiscountDTO {
     private Long id;
     private String description;
-    private Double amount;
-    private Double limitAmount;
+    private BigDecimal amount;
+    private BigDecimal limitAmount;
     private DiscountType discountType;
     private Long categoryId;
     private Long productId;
@@ -29,11 +32,11 @@ public class DiscountDTO {
         this.description = description;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -45,11 +48,11 @@ public class DiscountDTO {
         discountType = Type;
     }
 
-    public Double getLimitAmount() {
+    public BigDecimal getLimitAmount() {
         return limitAmount;
     }
 
-    public void setLimitAmount(Double limitAmount) {
+    public void setLimitAmount(BigDecimal limitAmount) {
         this.limitAmount = limitAmount;
     }
 
@@ -69,8 +72,12 @@ public class DiscountDTO {
         this.productId = productId;
     }
 
-    public Double applyDiscount(Double amount) {
-        Double totalWithDiscount = amount - ((this.amount * amount) / 100);
+    public BigDecimal applyDiscount(BigDecimal amount) {
+        BigDecimal discountAmount = this.amount.multiply(amount)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+
+        BigDecimal totalWithDiscount = amount.subtract(discountAmount);
+
         return totalWithDiscount;
     }
 }

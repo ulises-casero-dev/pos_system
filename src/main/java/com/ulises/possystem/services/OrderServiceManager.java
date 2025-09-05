@@ -22,6 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,24 +49,24 @@ public class OrderServiceManager implements OrderService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private UserDiscountResult applyUserDiscount(User user, Double totalPrice) {
+    private UserDiscountResult applyUserDiscount(User user, BigDecimal totalPrice) {
         List<DiscountDTO> userDiscounts = (user.getUserType() == UserType.EMPLOYEE)
                 ? this.discountServiceManager.findByDiscountType(DiscountType.EMPLOYEE)
                 : this.discountServiceManager.findByDiscountType(DiscountType.CUSTOMER);
 
 
         if (userDiscounts == null) {
-            return new UserDiscountResult(0.0, totalPrice);
+            return new UserDiscountResult(BigDecimal.valueOf(0.00), totalPrice);
         }
 
         DiscountDTO discountDto = userDiscounts.get(0);
 
-        Double totalWithDiscount = discountDto.applyDiscount(totalPrice);
-        Double totalDiscount = totalPrice - totalWithDiscount;
+        BigDecimal totalWithDiscount = discountDto.applyDiscount(totalPrice);
+        BigDecimal totalDiscount = totalPrice.subtract(totalWithDiscount);
 
         if (user.getUserType() == UserType.EMPLOYEE) {
             EmployeeDiscountUsageDTO dto = new EmployeeDiscountUsageDTO();
-            if (totalDiscount < discountDto.getLimitAmount()) {
+            if (totalDiscount.compareTo(discountDto.getLimitAmount()) < 0) {
                 dto.setAcumulatedAmount(totalDiscount);
                 employeeDiscountUsageServiceManager.update(user.getId(), dto);
                 return new UserDiscountResult(totalDiscount, totalWithDiscount);
@@ -80,8 +81,8 @@ public class OrderServiceManager implements OrderService {
 
         List<OrderItem> orderItems = new ArrayList<>();
 
-        Double totalDiscount = 0.0;
-        Double totalPrice = 0.0;
+        BigDecimal totalDiscount = BigDecimal.valueOf(0.00);
+        BigDecimal totalPrice = BigDecimal.valueOf(0.00);
 
         for (OrderItemCreateDTO orderItemDto : orderCreateDto.getOrderItems()) {
             Product product = this.productRepository.findById(orderItemDto.getProductId())
@@ -98,19 +99,24 @@ public class OrderServiceManager implements OrderService {
                     .filter(discount -> discount.getProductId() != null && discount.getProductId().equals(product.getId()))
                     .findFirst();
 
-            Double subTotal;
+            BigDecimal subTotal;
 
             if (productDiscount.isPresent()) {
                 DiscountDTO discount = productDiscount.get();
-                Double discountUnitPrice = discount.applyDiscount(product.getPrice());
-                totalDiscount += (product.getPrice() - discountUnitPrice) * orderItemDto.getQuantity();
-                subTotal = discountUnitPrice * orderItemDto.getQuantity();
+                BigDecimal discountUnitPrice = discount.applyDiscount(product.getPrice());
+
+                BigDecimal itemDiscount = product.getPrice().subtract(discountUnitPrice)
+                        .multiply(BigDecimal.valueOf(orderItemDto.getQuantity()));
+
+                totalDiscount = totalDiscount.add(itemDiscount);
+
+                subTotal = discountUnitPrice.multiply(BigDecimal.valueOf(orderItemDto.getQuantity()));
             } else {
-                subTotal = product.getPrice() * orderItemDto.getQuantity();
+                subTotal = product.getPrice().multiply(BigDecimal.valueOf(orderItemDto.getQuantity()));
             }
 
             orderItemEntity.setSubTotal(subTotal);
-            totalPrice += subTotal;
+            totalPrice = totalPrice.add(subTotal);
 
             orderItems.add(orderItemEntity);
         }
@@ -150,7 +156,7 @@ public class OrderServiceManager implements OrderService {
 
         UserDiscountResult userDiscountResult = applyUserDiscount(user, itemsDiscountResult.getTotalAfterItemsDiscounts());
 
-        Double totalDiscount = userDiscountResult.getUserDiscountAmount();
+        BigDecimal totalDiscount = userDiscountResult.getUserDiscountAmount();
 
 
         orderEntity.setTotalPrice(userDiscountResult.getTotalAfterUserDiscount());

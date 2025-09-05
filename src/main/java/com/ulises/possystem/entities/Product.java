@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "products")
 public class Product {
@@ -15,7 +17,7 @@ public class Product {
     private String name;
     @Column
     @NotNull
-    private Double price;
+    private BigDecimal price;
 
     @Column
     @NotNull
@@ -28,7 +30,7 @@ public class Product {
 
     public Product() {} //Siempre crear un constructor vacio
 
-    public Product(Long id, String name, Double price, Category category) {
+    public Product(Long id, String name, BigDecimal price, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -49,11 +51,11 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

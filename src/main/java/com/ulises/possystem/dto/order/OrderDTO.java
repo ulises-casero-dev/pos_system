@@ -1,5 +1,6 @@
 package com.ulises.possystem.dto.order;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.ulises.possystem.dto.orderItem.OrderItemDTO;
@@ -12,8 +13,8 @@ import java.util.List;
 public class OrderDTO {
     private Long id;
     private LocalDateTime date;
-    private Double totalPrice;
-    private Double totalDiscount;
+    private BigDecimal totalPrice;
+    private BigDecimal totalDiscount;
     private OrderState state;
     private Long userId;
     private List<OrderItemDTO> orderItems;
@@ -34,19 +35,19 @@ public class OrderDTO {
         this.date = date;
     }
 
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public Double getTotalDiscount() {
+    public BigDecimal getTotalDiscount() {
         return totalDiscount;
     }
 
-    public void setTotalDiscount(Double totalDiscount) {
+    public void setTotalDiscount(BigDecimal totalDiscount) {
         this.totalDiscount = totalDiscount;
     }
 

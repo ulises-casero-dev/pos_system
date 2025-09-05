@@ -1,19 +1,21 @@
 package com.ulises.possystem.helper;
 
-public class ItemsDiscountResult {
-    private Double totalAfterItemsDiscounts;
-    private Double itemsDiscountAmount;
+import java.math.BigDecimal;
 
-    public ItemsDiscountResult(Double itemsDiscountAmount, Double totalAfterItemsDiscounts){
+public class ItemsDiscountResult {
+    private BigDecimal totalAfterItemsDiscounts;
+    private BigDecimal itemsDiscountAmount;
+
+    public ItemsDiscountResult(BigDecimal itemsDiscountAmount, BigDecimal totalAfterItemsDiscounts){
         this.itemsDiscountAmount = itemsDiscountAmount;
         this.totalAfterItemsDiscounts = totalAfterItemsDiscounts;
     }
 
-    public Double getTotalAfterItemsDiscounts() {
+    public BigDecimal getTotalAfterItemsDiscounts() {
         return totalAfterItemsDiscounts;
     }
 
-    public Double getItemsDiscountAmount() {
+    public BigDecimal getItemsDiscountAmount() {
         return itemsDiscountAmount;
     }
 }
