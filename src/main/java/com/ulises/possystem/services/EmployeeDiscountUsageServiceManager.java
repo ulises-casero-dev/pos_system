@@ -62,8 +62,6 @@ public class EmployeeDiscountUsageServiceManager implements EmployeeDiscountUsag
         EmployeeDiscountUsage entity = this.employeeDiscountUsageRepository.getByEmployeeId(id);
 
         if (entity.isActive()) {
-            System.out.println("ENTIDAD ACTIVA");
-            System.out.println("DESCUENTO ACUMULADO: "+ entity.getAcumulatedAmount()+" - MONTO DE AUMENTO: "+ dto.getAcumulatedAmount());
             entity.setAcumulatedAmount((entity.getAcumulatedAmount() + dto.getAcumulatedAmount()));
             EmployeeDiscountUsage updatedEntity = this.employeeDiscountUsageRepository.save(entity);
             return this.modelMapper.map(updatedEntity, EmployeeDiscountUsageDTO.class);

@@ -65,13 +65,9 @@ public class OrderServiceManager implements OrderService {
 
         if (user.getUserType() == UserType.EMPLOYEE) {
             EmployeeDiscountUsageDTO dto = new EmployeeDiscountUsageDTO();
-            System.out.println("ENTRA EN EL PRIMER IF");
             if (totalDiscount < discountDto.getLimitAmount()) {
-                System.out.println("ENTRA EN EL SEGUNDO IF");
                 dto.setAcumulatedAmount(totalDiscount);
-                System.out.println("PRE UPDATE - DESCUENTO: "+ dto.getAcumulatedAmount());
                 employeeDiscountUsageServiceManager.update(user.getId(), dto);
-                System.out.println("POST UPDATE");
                 return new UserDiscountResult(totalDiscount, totalWithDiscount);
             }
         }
@@ -154,9 +150,7 @@ public class OrderServiceManager implements OrderService {
 
         UserDiscountResult userDiscountResult = applyUserDiscount(user, itemsDiscountResult.getTotalAfterItemsDiscounts());
 
-        Double totalDiscount = itemsDiscountResult.getItemsDiscountAmount();
-
-        totalDiscount += userDiscountResult.getUserDiscountAmount();
+        Double totalDiscount = userDiscountResult.getUserDiscountAmount();
 
 
         orderEntity.setTotalPrice(userDiscountResult.getTotalAfterUserDiscount());
