@@ -8,6 +8,6 @@ public interface CategoryService {
     CategoryDTO findById(Long id);
     CategoryDTO save(CategoryDTO categorySto);
     CategoryDTO update(Long id, CategoryDTO categoryDto);
-    CategoryDTO deactivate(Long id);
-    CategoryDTO activate(Long id);
+    void deactivate(Long id);
+    void activate(Long id);
 }

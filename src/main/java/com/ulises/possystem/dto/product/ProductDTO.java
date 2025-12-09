@@ -11,6 +11,7 @@ public class ProductDTO {
     private String categoryName;
     private boolean active;
 
+    public ProductDTO() {}
 
     public Long getId() {
         return id;

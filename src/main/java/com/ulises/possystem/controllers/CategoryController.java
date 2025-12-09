@@ -1,5 +1,6 @@
 package com.ulises.possystem.controllers;
 
+import com.ulises.possystem.dto.ApiMessage;
 import com.ulises.possystem.dto.CategoryDTO;
 import com.ulises.possystem.services.CategoryServiceManager;
 import jakarta.validation.Valid;
@@ -38,5 +39,17 @@ public class CategoryController {
                                             @Valid @RequestBody CategoryDTO category){
         CategoryDTO categoryDto = this.serviceManager.update(id, category);
         return ResponseEntity.ok(categoryDto);
+    }
+
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<ApiMessage> activateCategory(@PathVariable Long id) {
+        this.serviceManager.activate(id);
+        return ResponseEntity.ok(new ApiMessage("Category activation **successful**"));
+    }
+
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<ApiMessage> deactivateCategory(@PathVariable Long id){
+        this.serviceManager.deactivate(id);
+        return ResponseEntity.ok(new ApiMessage("Category deactivation **successful**"));
     }
 }

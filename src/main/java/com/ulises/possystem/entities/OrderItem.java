@@ -14,7 +14,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    @NotNull(message = "The quantity mos be greater than 1")
+    @NotNull(message = "The quantity most be greater than 1")
     private Integer quantity;
     @Column
     private BigDecimal unitPrice;

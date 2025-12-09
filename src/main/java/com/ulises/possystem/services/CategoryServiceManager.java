@@ -2,11 +2,14 @@ package com.ulises.possystem.services;
 
 import com.ulises.possystem.dto.CategoryDTO;
 import com.ulises.possystem.entities.Category;
+import com.ulises.possystem.exception.CategoryInUseException;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
+import com.ulises.possystem.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
 public class CategoryServiceManager implements CategoryService{
     @Autowired
     private CategoryRepository repository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -56,27 +62,20 @@ public class CategoryServiceManager implements CategoryService{
         return modelMapper.map(updatedCategory, CategoryDTO.class);
     }
 
+    @Transactional
     @Override
-    public CategoryDTO deactivate(Long id){
-        Category categoryEntity = this.repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
-
-        categoryEntity.setActive(false);
-
-        Category updateCategory = this.repository.save(categoryEntity);
-
-        return modelMapper.map(updateCategory, CategoryDTO.class);
+    public void deactivate(Long id) {
+        // Comprueba que no existan productos con esta categoría asociada,
+        // de ser asi la misma no puede "eliminarse"
+        if(this.productRepository.countByCategoryId(id) > 0) {
+            throw new CategoryInUseException(id);
+        }
+        else {
+            this.repository.updateActivateStatus(id, false);
+        }
     }
 
+    @Transactional
     @Override
-    public CategoryDTO activate(Long id){
-        Category categoryEntity = this.repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
-
-        categoryEntity.setActive(true);
-
-        Category updateCategory = this.repository.save(categoryEntity);
-
-        return this.modelMapper.map(updateCategory, CategoryDTO.class);
-    }
+    public void activate(Long id) {this.repository.updateActivateStatus(id, true);}
 }
