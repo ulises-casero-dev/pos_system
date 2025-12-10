@@ -7,6 +7,7 @@ import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Discount;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.enums.DiscountType;
+import com.ulises.possystem.exception.BadRequestException;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
 import com.ulises.possystem.repositories.DiscountRepository;
@@ -59,12 +60,21 @@ public class DiscountServiceManager implements DiscountService{
 
     @Override
     public DiscountDTO save(DiscountCreateDTO createDto) {
+        if (createDto.getCategoryId() != null && createDto.getProductId() != null) {
+            throw new BadRequestException("You can't apply a discount to a category and product at the same time");
+        }
+        if (createDto.getCategoryId() == null && createDto.getProductId() == null) {
+            throw new BadRequestException("The discount needs a category or product seted");
+        }
+
         Discount newDiscount = new Discount();
 
         newDiscount.setDescription(createDto.getDescription());
         newDiscount.setAmount(createDto.getAmount());
         newDiscount.setDiscountType(createDto.getDiscountType());
         newDiscount.setLimitAmount(createDto.getLimitAmount());
+
+
 
         if (createDto.getCategoryId() != null) {
             Category category = categoryRepository.findById(createDto.getCategoryId())

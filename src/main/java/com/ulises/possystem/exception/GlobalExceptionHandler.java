@@ -1,6 +1,7 @@
 package com.ulises.possystem.exception;
 
 
+import com.ulises.possystem.dto.ApiMessage;
 import com.ulises.possystem.exception.ErrorResponse;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,10 @@ public class GlobalExceptionHandler {
         // Loguea el error
         ex.printStackTrace();
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiMessage> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity.badRequest().body(new ApiMessage(ex.getMessage()));
     }
 }

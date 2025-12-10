@@ -5,6 +5,7 @@ import com.ulises.possystem.dto.discount.DiscountCreateDTO;
 import com.ulises.possystem.dto.discount.DiscountDTO;
 import com.ulises.possystem.dto.discount.DiscountUpdateDTO;
 import com.ulises.possystem.discount.service.DiscountServiceManager;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class DiscountController {
     }
 
     @PostMapping()
-    public ResponseEntity<DiscountDTO> saveDiscount(@RequestBody DiscountCreateDTO discount) {
+    public ResponseEntity<DiscountDTO> saveDiscount(@Valid @RequestBody DiscountCreateDTO discount) {
         DiscountDTO discountDto = this.serviceManager.save(discount);
         return ResponseEntity.status(HttpStatus.CREATED).body(discountDto);
     }
