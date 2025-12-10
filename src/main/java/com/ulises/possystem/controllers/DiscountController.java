@@ -1,5 +1,6 @@
 package com.ulises.possystem.controllers;
 
+import com.ulises.possystem.dto.ApiMessage;
 import com.ulises.possystem.dto.discount.DiscountCreateDTO;
 import com.ulises.possystem.dto.discount.DiscountDTO;
 import com.ulises.possystem.dto.discount.DiscountUpdateDTO;
@@ -33,19 +34,21 @@ public class DiscountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(discountDto);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<DiscountDTO> updateDiscount(@PathVariable Long id,
                                                       @RequestBody DiscountUpdateDTO discountDto) {
-        return ResponseEntity.ok(this.serviceManager.update(id, discountDto));
+        return ResponseEntity.ok(this.serviceManager.patchDiscount(id, discountDto));
     }
 
-    @PatchMapping("/deactivate/{id}")
-    public ResponseEntity<DiscountDTO> deactivateDiscount(@PathVariable Long id) {
-        return ResponseEntity.ok(this.serviceManager.deactivateDiscount(id));
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<ApiMessage> deactivateDiscount(@PathVariable Long id) {
+        this.serviceManager.deactivateDiscount(id);
+        return ResponseEntity.ok(new ApiMessage("Discount deactivation **successful**"));
     }
 
-    @PatchMapping("/activate/{id}")
-    public ResponseEntity<DiscountDTO> activateDiscount(@PathVariable Long id) {
-        return ResponseEntity.ok(this.serviceManager.activateDiscount(id));
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<ApiMessage> activateDiscount(@PathVariable Long id) {
+        this.serviceManager.activateDiscount(id);
+        return ResponseEntity.ok(new ApiMessage("Discount activation **successful**"));
     }
 }

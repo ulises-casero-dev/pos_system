@@ -85,15 +85,15 @@ public class DiscountServiceManager implements DiscountService{
     }
 
     @Override
-    public DiscountDTO update(Long id, DiscountUpdateDTO discountUpdateDto) {
+    public DiscountDTO patchDiscount(Long id, DiscountUpdateDTO discountUpdateDto) {
         Discount discountEntity = this.discountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
 
-        discountEntity.setDescription(discountUpdateDto.getDescription());
-        discountEntity.setAmount(discountUpdateDto.getAmount());
-        discountEntity.setLimitAmount(discountUpdateDto.getLimitAmount());
+        if (discountUpdateDto.getDescription() != null) discountEntity.setDescription(discountUpdateDto.getDescription());
+        if (discountUpdateDto.getAmount() != null) discountEntity.setAmount(discountUpdateDto.getAmount());
+        if (discountUpdateDto.getLimitAmount() != null) discountEntity.setLimitAmount(discountUpdateDto.getLimitAmount());
 
-        if(discountUpdateDto.getCategoryId() != null) {
+        if (discountUpdateDto.getCategoryId() != null) {
             Category category = this.categoryRepository.findById(discountUpdateDto.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found."));
             discountEntity.setCategory(category);
@@ -111,26 +111,18 @@ public class DiscountServiceManager implements DiscountService{
     }
 
     @Override
-    public DiscountDTO deactivateDiscount(Long id) {
+    public void deactivateDiscount(Long id) {
         Discount discountEntity = this.discountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
 
-        discountEntity.setActive(false);
-
-        Discount updatedDiscount = this.discountRepository.save(discountEntity);
-
-        return this.modelMapper.map(updatedDiscount, DiscountDTO.class);
+        this.discountRepository.updateActivateStatus(false, id);
     }
 
     @Override
-    public DiscountDTO activateDiscount(Long id) {
+    public void activateDiscount(Long id) {
         Discount discountEntity = this.discountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Discount not found."));
 
-        discountEntity.setActive(true);
-
-        Discount updatedDiscount = this.discountRepository.save(discountEntity);
-
-        return this.modelMapper.map(updatedDiscount, DiscountDTO.class);
+        this.discountRepository.updateActivateStatus(true, id);
     }
 }

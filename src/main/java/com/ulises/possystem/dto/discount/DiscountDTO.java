@@ -16,6 +16,8 @@ public class DiscountDTO {
     private Long categoryId;
     private Long productId;
 
+    public DiscountDTO(){}
+
     public Long getId() {
         return id;
     }

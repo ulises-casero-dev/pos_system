@@ -13,7 +13,7 @@ public interface DiscountService {
     List<DiscountDTO> findByDiscountType(DiscountType discountType);
     DiscountDTO findById(Long id);
     DiscountDTO save(DiscountCreateDTO discountCreateDto);
-    DiscountDTO update(Long id, DiscountUpdateDTO discountUpdateDto);
-    DiscountDTO deactivateDiscount(Long id);
-    DiscountDTO activateDiscount(Long id);
+    DiscountDTO patchDiscount(Long id, DiscountUpdateDTO discountUpdateDto);
+    void deactivateDiscount(Long id);
+    void activateDiscount(Long id);
 }
