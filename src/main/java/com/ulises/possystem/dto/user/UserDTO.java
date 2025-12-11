@@ -16,6 +16,8 @@ public class UserDTO {
     private UserType type;
     private boolean active;
 
+    public UserDTO(){}
+
     public Long getId() {
         return id;
     }

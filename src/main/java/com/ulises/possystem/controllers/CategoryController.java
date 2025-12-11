@@ -1,7 +1,7 @@
 package com.ulises.possystem.controllers;
 
 import com.ulises.possystem.dto.ApiMessage;
-import com.ulises.possystem.dto.CategoryDTO;
+import com.ulises.possystem.dto.category.CategoryDTO;
 import com.ulises.possystem.services.CategoryServiceManager;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")

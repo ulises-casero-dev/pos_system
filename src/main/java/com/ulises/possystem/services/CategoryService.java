@@ -1,6 +1,6 @@
 package com.ulises.possystem.services;
 
-import com.ulises.possystem.dto.CategoryDTO;
+import com.ulises.possystem.dto.category.CategoryDTO;
 import java.util.List;
 
 public interface CategoryService {

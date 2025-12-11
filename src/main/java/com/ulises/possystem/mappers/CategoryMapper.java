@@ -1,6 +1,6 @@
 package com.ulises.possystem.mappers;
 
-import com.ulises.possystem.dto.CategoryDTO;
+import com.ulises.possystem.dto.category.CategoryDTO;
 import com.ulises.possystem.entities.Category;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

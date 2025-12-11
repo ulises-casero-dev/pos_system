@@ -1,4 +1,4 @@
-package com.ulises.possystem.dto;
+package com.ulises.possystem.dto.category;
 
 import lombok.*;
 
