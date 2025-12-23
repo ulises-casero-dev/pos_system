@@ -3,9 +3,7 @@ package com.ulises.possystem.services;
 import com.ulises.possystem.dto.orderItem.OrderItemCreateDTO;
 import com.ulises.possystem.dto.orderItem.OrderItemDTO;
 import com.ulises.possystem.dto.orderItem.OrdetItemUpdateDTO;
-import com.ulises.possystem.entities.Order;
 import com.ulises.possystem.entities.OrderItem;
-import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.OrderItemRepository;
 import com.ulises.possystem.repositories.OrderRepository;
@@ -57,6 +55,12 @@ public class OrderItemServiceManager implements OrderItemService {
         OrderItem orderItem = this.repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order item not Found."));
         return this.modelMapper.map(orderItem, OrderItemDTO.class);
+    }
+
+    @Override
+    public OrderItemDTO save(OrderItemCreateDTO itemDto) {
+
+        return null;
     }
 
     @Override

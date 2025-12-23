@@ -11,6 +11,7 @@ import java.util.List;
 public interface DiscountService {
     List<DiscountDTO> findAll();
     List<DiscountDTO> findByDiscountType(DiscountType discountType);
+    List<DiscountDTO> findByDicountStatus(boolean status);
     DiscountDTO findById(Long id);
     DiscountDTO save(DiscountCreateDTO discountCreateDto);
     DiscountDTO patchDiscount(Long id, DiscountUpdateDTO discountUpdateDto);

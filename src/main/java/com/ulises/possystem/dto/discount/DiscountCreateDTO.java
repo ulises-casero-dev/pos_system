@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DiscountCreateDTO {
 
-    @NotNull(message = "The description can't be null")
+    @NotBlank(message = "The description can't be empty")
     private String description;
 
     @NotNull(message = "The discount amount can't be null")

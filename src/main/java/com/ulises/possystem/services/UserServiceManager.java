@@ -1,9 +1,12 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.discount.service.EmployeeDiscountUsageService;
 import com.ulises.possystem.dto.user.UserCreateDTO;
 import com.ulises.possystem.dto.user.UserDTO;
 import com.ulises.possystem.dto.user.UserUpdateDTO;
 import com.ulises.possystem.entities.User;
+import com.ulises.possystem.enums.UserType;
+import com.ulises.possystem.exception.BadRequestException;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -18,6 +21,9 @@ import java.util.stream.Collectors;
 public class UserServiceManager implements UserService{
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private  EmployeeDiscountUsageService employeeDiscountUsageService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -57,18 +63,31 @@ public class UserServiceManager implements UserService{
         return this.modelMapper.map(user, UserDTO.class);
     }
 
+    @Transactional
     @Override
-    public UserDTO save(UserCreateDTO userDto){
+    public UserDTO save(UserCreateDTO userDto) {
         User user = new User();
 
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
         user.setCelphone(userDto.getPhone());
-        user.setEmail(userDto.getEmail());
-        user.setMemberIdentification(userDto.getIdentification());
         user.setUserType(userDto.getUserType());
 
+        if (this.repository.existsByEmail(userDto.getEmail())){
+            throw new BadRequestException("The email address is alredy in use");
+        }
+        user.setEmail(userDto.getEmail());
+
+        if (this.repository.existsByMemberIdentification(userDto.getIdentification())) {
+            throw new BadRequestException("The memeber identification alredy exists");
+        }
+        user.setMemberIdentification(userDto.getIdentification());
+
         User savedUser = this.repository.save(user);
+
+        if (savedUser.getUserType() == UserType.EMPLOYEE) {
+            employeeDiscountUsageService.save(savedUser.getId());
+        }
 
         return this.modelMapper.map(savedUser, UserDTO.class);
     }

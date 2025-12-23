@@ -35,6 +35,14 @@ public class CategoryServiceManager implements CategoryService{
     }
 
     @Override
+    public List<CategoryDTO> findByActiveTrue(){
+         List<Category> categories = this.repository.findByActiveTrue();
+        return categories.stream().
+                map(category -> this.modelMapper.map(category, CategoryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public CategoryDTO findById(Long id) {
         Category categoryEntity = this.repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));

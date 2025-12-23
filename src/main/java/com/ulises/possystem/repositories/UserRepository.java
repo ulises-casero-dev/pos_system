@@ -13,6 +13,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByActiveTrue();
     List<User> findByActiveFalse();
 
+    boolean existsByEmail(String email);
+
+    boolean existsByMemberIdentification(String identification);
+
     @Modifying
     @Query("UPDATE User user SET user.active = :active WHERE user.id = :id")
     void UpdateActiveStatus(@Param("id") Long id,@Param("active") boolean active);

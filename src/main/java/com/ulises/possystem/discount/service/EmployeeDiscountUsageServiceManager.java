@@ -33,6 +33,15 @@ public class EmployeeDiscountUsageServiceManager implements EmployeeDiscountUsag
     }
 
     @Override
+    public  List<EmployeeDiscountUsageDTO> findByActiveTrue() {
+        List<EmployeeDiscountUsage> activeUsersdiscounts = this.employeeDiscountUsageRepository.findByActiveTrue();
+        
+        return activeUsersdiscounts.stream()
+                .map(discount -> modelMapper.map(discount, EmployeeDiscountUsageDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public EmployeeDiscountUsageDTO findById(Long id) {
         EmployeeDiscountUsage employeeDiscountUsage = this.employeeDiscountUsageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee discount not found"));

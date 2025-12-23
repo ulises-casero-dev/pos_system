@@ -13,9 +13,12 @@ import java.util.List;
 
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
-    @Query("Select d FROM Discount d WHERE d.active = true and d.discountType = :type")
-    List<Discount>  findByDiscountType(@Param("type") DiscountType type);
 
+    @Query("SELECT d FROM Discount d WHERE d.active = true and d.discountType = :type")
+    List<Discount> findByDiscountType(@Param("type") DiscountType type);
+
+    @Query("SELECT d FROM Discount d WHERE d.active = :status")
+    List<Discount> findByDicountStatus(@Param("status") boolean status);
 
     @Transactional
     @Modifying

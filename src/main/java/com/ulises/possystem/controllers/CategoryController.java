@@ -27,6 +27,11 @@ public class CategoryController {
         return ResponseEntity.ok(this.serviceManager.findById(id));
     }
 
+    @GetMapping("/actives")
+    public ResponseEntity<List<CategoryDTO>> findActives(){
+        return ResponseEntity.ok(this.serviceManager.findByActiveTrue());
+    }
+
     @PostMapping()
     public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryDTO category){
         CategoryDTO categoryDto = this.serviceManager.save(category);

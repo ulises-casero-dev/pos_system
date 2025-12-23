@@ -10,6 +10,7 @@ public interface OrderItemService {
     List<OrderItemDTO> findAll();
     List<OrderItemDTO> findByOrderId(Long id);
     OrderItemDTO findById(Long id);
+    OrderItemDTO save(OrderItemCreateDTO itemDto);
     OrderItemDTO update(Long id, OrdetItemUpdateDTO orderItemDto);
     OrderItemDTO cancelOrderItem(Long id);
     OrderItemDTO restoreOrderItem(Long id);

@@ -51,6 +51,15 @@ public class DiscountServiceManager implements DiscountService{
     }
 
     @Override
+    public List<DiscountDTO> findByDicountStatus(boolean status){
+        List<Discount> discounts = this.discountRepository.findByDicountStatus(status);
+
+        return discounts.stream()
+                .map(discount -> this.modelMapper.map(discount, DiscountDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public DiscountDTO findById(Long id) {
         Discount discountEntity = this.discountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Discount not found"));

@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductCreateDTO {
 
-    @NotNull(message = "The name of the product can't be null")
+    @NotBlank(message = "The name of the product can't be empty")
+    @Size(max = 100, message = "The product name must no exceed 100 characters")
     private String name;
 
-    @NotNull(message = "The price of the product can't be null")
-    @Min(value = 1, message = "Price value must be at least 1")
+    @NotNull(message = "The price can't be null")
+    @Min(value = 1, message = "The price must be greater than 1")
     private Double price;
 
     @NotNull(message = "The categorie of the product can't be null")

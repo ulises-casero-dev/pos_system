@@ -20,6 +20,11 @@ public class EmployeeDiscountUsageController {
         return ResponseEntity.ok(this.serviceManager.findAll());
     }
 
+    @GetMapping("/actives")
+    public ResponseEntity<List<EmployeeDiscountUsageDTO>> findByActiveTrue() {
+        return ResponseEntity.ok(this.serviceManager.findByActiveTrue());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDiscountUsageDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(this.serviceManager.findById(id));
