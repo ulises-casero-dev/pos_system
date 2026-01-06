@@ -58,12 +58,6 @@ public class OrderItemServiceManager implements OrderItemService {
     }
 
     @Override
-    public OrderItemDTO save(OrderItemCreateDTO itemDto) {
-
-        return null;
-    }
-
-    @Override
     public OrderItemDTO update(Long id, OrdetItemUpdateDTO orderItemDto) {
         OrderItem orderItemEntity = this.repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order item not Found."));

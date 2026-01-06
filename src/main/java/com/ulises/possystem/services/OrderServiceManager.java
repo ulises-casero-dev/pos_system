@@ -112,7 +112,7 @@ public class OrderServiceManager implements OrderService {
 
     @Override
     public List<OrderDTO> findAll() {
-        List<Order> orders = this.repository.findAll();
+        List<Order> orders = this.repository.findAllWithDetails();
         return orders.stream()
                 .map(order -> this.modelMapper.map(order, OrderDTO.class))
                 .collect(Collectors.toList());

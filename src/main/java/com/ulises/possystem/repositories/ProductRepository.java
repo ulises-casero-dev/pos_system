@@ -6,8 +6,13 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    @EntityGraph(value = "Product.category")
+    List<Product> findAll();
 
     @Query("SELECT Count(p) FROM Product p WHERE p.category.id = :categoryId")
     int countByCategoryId(@Param("categoryId") Long categoryId);

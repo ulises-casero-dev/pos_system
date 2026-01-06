@@ -7,6 +7,12 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 
 @Entity
+@NamedEntityGraph(
+        name = "Product.category",
+        attributeNodes = {
+                @NamedAttributeNode("category")
+        }
+)
 @Table(name = "products")
 public class Product {
     @Id
@@ -24,7 +30,7 @@ public class Product {
     @ColumnDefault("true")
     private boolean active = true;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

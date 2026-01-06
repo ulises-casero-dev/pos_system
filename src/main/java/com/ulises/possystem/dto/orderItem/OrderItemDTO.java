@@ -13,6 +13,8 @@ public class OrderItemDTO {
     private Long productId;
     private String productName;
 
+    public OrderItemDTO() {}
+
     public Long getId() {
         return id;
     }

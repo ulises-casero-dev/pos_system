@@ -19,6 +19,8 @@ public class OrderDTO {
     private Long userId;
     private List<OrderItemDTO> orderItems;
 
+    public OrderDTO() {}
+
     public Long getId() {
         return id;
     }
