@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderCreateDTO {
 
-    @NotNull(message = "User id can't be null")
+    //@NotNull(message = "User id can't be null")
     private Long userId;
 
     @NotNull(message = "The list of items can't be null")

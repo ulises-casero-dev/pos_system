@@ -49,7 +49,7 @@ public class OrderServiceManager implements OrderService {
 
     private UserDiscountResult applyUserDiscount(User user, BigDecimal totalPrice) {
 
-        String strategyKey = user.getUserType().name().toLowerCase(Locale.ROOT) + "DiscountStratrgy";
+        String strategyKey = user.getUserType().name().toLowerCase(Locale.ROOT) + "DiscountStrategy";
 
         DiscountStrategy strategy = discountStrategies.get(strategyKey);
 
@@ -130,20 +130,28 @@ public class OrderServiceManager implements OrderService {
     public OrderDTO save(OrderCreateDTO orderCreateDto) {
         Order orderEntity = new Order();
 
-        User user = this.userRepository.findById(orderCreateDto.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-
-        orderEntity.setUser(user);
         orderEntity.setDate(LocalDateTime.now());
 
         ItemsDiscountResult itemsDiscountResult = applyItemsDiscunts(orderCreateDto, orderEntity);
 
-        UserDiscountResult userDiscountResult = applyUserDiscount(user, itemsDiscountResult.getTotalAfterItemsDiscounts());
+        BigDecimal totalDiscount = BigDecimal.ZERO;
 
-        BigDecimal totalDiscount = userDiscountResult.getUserDiscountAmount();
+        if (orderCreateDto.getUserId() != null) {
+            User user = this.userRepository.findById(orderCreateDto.getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
+            orderEntity.setUser(user);
 
-        orderEntity.setTotalPrice(userDiscountResult.getTotalAfterUserDiscount());
+            UserDiscountResult userDiscountResult = applyUserDiscount(user, itemsDiscountResult.getTotalAfterItemsDiscounts());
+
+            totalDiscount = userDiscountResult.getUserDiscountAmount().add(itemsDiscountResult.getItemsDiscountAmount());
+            orderEntity.setTotalPrice(userDiscountResult.getTotalAfterUserDiscount());
+
+        } else {
+            totalDiscount = itemsDiscountResult.getItemsDiscountAmount();
+            orderEntity.setTotalPrice(itemsDiscountResult.getTotalAfterItemsDiscounts());
+        }
+
         orderEntity.setTotalDiscount(totalDiscount);
 
         orderEntity.setState(OrderState.CREATED);
