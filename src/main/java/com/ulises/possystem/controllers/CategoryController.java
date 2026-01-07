@@ -1,6 +1,7 @@
 package com.ulises.possystem.controllers;
 
 import com.ulises.possystem.dto.ApiMessage;
+import com.ulises.possystem.dto.category.CategoryCreateDTO;
 import com.ulises.possystem.dto.category.CategoryDTO;
 import com.ulises.possystem.services.CategoryServiceManager;
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryDTO category){
+    public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryCreateDTO category){
         CategoryDTO categoryDto = this.serviceManager.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryDto);
     }

@@ -1,5 +1,6 @@
 package com.ulises.possystem.services;
 
+import com.ulises.possystem.dto.category.CategoryCreateDTO;
 import com.ulises.possystem.dto.category.CategoryDTO;
 import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.exception.CategoryInUseException;
@@ -51,7 +52,7 @@ public class CategoryServiceManager implements CategoryService{
     }
 
     @Override
-    public CategoryDTO save(CategoryDTO categoryDto) {
+    public CategoryDTO save(CategoryCreateDTO categoryDto) {
         Category categoryEntity = this.modelMapper.map(categoryDto, Category.class);
         Category savedCategory = this.repository.save(categoryEntity);
 

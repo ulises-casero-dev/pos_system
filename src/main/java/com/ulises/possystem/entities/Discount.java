@@ -21,7 +21,7 @@ public class Discount {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private DiscountType discountType;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double limitAmount;
     @ManyToOne
     @JoinColumn(name = "category_id")

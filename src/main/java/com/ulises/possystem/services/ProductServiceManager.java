@@ -43,11 +43,12 @@ public class ProductServiceManager implements ProductService{
 
     @Override
     public ProductDTO save(ProductCreateDTO productCreateDto) {
-        Product productEntity = this.modelMapper.map(productCreateDto, Product.class);
-
         Category category = this.categoryRepository.findById(productCreateDto.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
+        Product productEntity = new Product();
+        productEntity.setName(productCreateDto.getName());
+        productEntity.setPrice(productCreateDto.getPrice());
         productEntity.setCategory(category);
 
         Product saveProduct = this.productRepository.save(productEntity);

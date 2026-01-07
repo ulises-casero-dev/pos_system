@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 public class ProductCreateDTO {
 
@@ -13,7 +15,7 @@ public class ProductCreateDTO {
 
     @NotNull(message = "The price can't be null")
     @Min(value = 1, message = "The price must be greater than 1")
-    private Double price;
+    private BigDecimal price;
 
     @NotNull(message = "The categorie of the product can't be null")
     private Long categoryId;
@@ -22,7 +24,7 @@ public class ProductCreateDTO {
         return this.name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return this.price;
     }
 

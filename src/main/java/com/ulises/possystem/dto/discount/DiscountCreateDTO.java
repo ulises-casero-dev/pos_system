@@ -20,7 +20,7 @@ public class DiscountCreateDTO {
     @NotNull(message = "The discount type can't be null")
     private DiscountType discountType;
 
-    @NotNull(message = "The limit amount can't be null")
+    //@NotNull(message = "The limit amount can't be null")
     @Min(value = 1, message = "Limit amount must be at least 1")
     private Double limitAmount;
 
