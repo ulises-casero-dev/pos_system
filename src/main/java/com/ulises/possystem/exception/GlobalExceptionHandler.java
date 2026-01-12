@@ -2,6 +2,9 @@ package com.ulises.possystem.exception;
 
 
 import com.ulises.possystem.dto.ApiMessage;
+import com.ulises.possystem.exception.business.*;
+import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
+import com.ulises.possystem.exception.validation.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -60,6 +63,38 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    //Products Errors
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleProductAlreadyExists (ProductAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProductInctiveException.class)
+    public ResponseEntity<ErrorResponse> hadleProductInctive(ProductInctiveException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // Discount Errors
+    @ExceptionHandler(InvalidDiscountScopeException.class)
+    public ResponseEntity<ErrorResponse> hadleInvalidDiscountScope(InvalidDiscountScopeException ex){
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
 
     // Para errores generales

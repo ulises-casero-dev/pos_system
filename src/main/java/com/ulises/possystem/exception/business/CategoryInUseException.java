@@ -1,4 +1,4 @@
-package com.ulises.possystem.exception;
+package com.ulises.possystem.exception.business;
 
 public class CategoryInUseException extends RuntimeException {
     public CategoryInUseException(Long categoryId){

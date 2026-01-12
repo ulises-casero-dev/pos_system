@@ -4,7 +4,7 @@ import com.ulises.possystem.dto.EmployeeDiscountUsageDTO;
 import com.ulises.possystem.entities.EmployeeDiscountUsage;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.UserType;
-import com.ulises.possystem.exception.ResourceNotFoundException;
+import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.repositories.EmployeeDiscountUsageRepository;
 import com.ulises.possystem.repositories.UserRepository;
 import org.modelmapper.ModelMapper;

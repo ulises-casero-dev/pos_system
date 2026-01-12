@@ -12,7 +12,8 @@ import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.DiscountType;
 import com.ulises.possystem.enums.OrderState;
-import com.ulises.possystem.exception.ResourceNotFoundException;
+import com.ulises.possystem.exception.business.ProductInctiveException;
+import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.helper.ItemsDiscountResult;
 import com.ulises.possystem.helper.UserDiscountResult;
 import com.ulises.possystem.repositories.OrderRepository;
@@ -71,6 +72,10 @@ public class OrderServiceManager implements OrderService {
         for (OrderItemCreateDTO orderItemDto : orderCreateDto.getOrderItems()) {
             Product product = this.productRepository.findById(orderItemDto.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
+
+            if (this.productRepository.existsByIdAndActiveFalse(orderItemDto.getProductId())) {
+                throw new ProductInctiveException(orderItemDto.getProductId());
+            }
 
             OrderItem orderItemEntity = new OrderItem();
 

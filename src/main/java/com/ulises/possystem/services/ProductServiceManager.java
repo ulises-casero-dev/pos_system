@@ -5,9 +5,10 @@ import com.ulises.possystem.dto.product.ProductDTO;
 import com.ulises.possystem.dto.product.ProductUpdateDTO;
 import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Product;
-import com.ulises.possystem.exception.BadRequestException;
-import com.ulises.possystem.exception.CategoryInactiveException;
-import com.ulises.possystem.exception.ResourceNotFoundException;
+import com.ulises.possystem.exception.business.ProductAlreadyExistsException;
+import com.ulises.possystem.exception.validation.BadRequestException;
+import com.ulises.possystem.exception.business.CategoryInactiveException;
+import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
 import com.ulises.possystem.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
@@ -49,7 +50,7 @@ public class ProductServiceManager implements ProductService{
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         if (this.productRepository.existsByName(productCreateDto.getName())) {
-            throw new BadRequestException("A product with this name already exists");
+            throw new ProductAlreadyExistsException(productCreateDto.getName());
         } else {
             if (!this.categoryRepository.existsByIdAndActiveTrue(productCreateDto.getCategoryId())) {
                 throw new CategoryInactiveException(productCreateDto.getCategoryId());

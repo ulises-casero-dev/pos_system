@@ -16,6 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByIdAndActiveFalse(Long id);
+
     @Query("SELECT Count(p) FROM Product p WHERE p.category.id = :categoryId")
     int countByCategoryId(@Param("categoryId") Long categoryId);
 
