@@ -3,6 +3,8 @@ package com.ulises.possystem.services;
 import com.ulises.possystem.dto.category.CategoryCreateDTO;
 import com.ulises.possystem.dto.category.CategoryDTO;
 import com.ulises.possystem.entities.Category;
+import com.ulises.possystem.exception.BadRequestException;
+import com.ulises.possystem.exception.CategoryAlreadyExistsException;
 import com.ulises.possystem.exception.CategoryInUseException;
 import com.ulises.possystem.exception.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
@@ -53,10 +55,15 @@ public class CategoryServiceManager implements CategoryService{
 
     @Override
     public CategoryDTO save(CategoryCreateDTO categoryDto) {
-        Category categoryEntity = this.modelMapper.map(categoryDto, Category.class);
-        Category savedCategory = this.repository.save(categoryEntity);
 
-        return this.modelMapper.map(savedCategory, CategoryDTO.class);
+        if (this.repository.existsByName(categoryDto.getName())) {
+            throw new CategoryAlreadyExistsException(categoryDto.getName());
+        } else {
+            Category categoryEntity = this.modelMapper.map(categoryDto, Category.class);
+            Category savedCategory = this.repository.save(categoryEntity);
+
+            return this.modelMapper.map(savedCategory, CategoryDTO.class);
+        }
     }
 
     @Override
@@ -74,8 +81,6 @@ public class CategoryServiceManager implements CategoryService{
     @Transactional
     @Override
     public void deactivate(Long id) {
-        // Comprueba que no existan productos con esta categoría asociada,
-        // de ser asi la misma no puede "eliminarse"
         if(this.productRepository.countByCategoryId(id) > 0) {
             throw new CategoryInUseException(id);
         }

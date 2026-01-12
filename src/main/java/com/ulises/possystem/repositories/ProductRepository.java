@@ -14,6 +14,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @EntityGraph(value = "Product.category")
     List<Product> findAll();
 
+    boolean existsByName(String name);
+
     @Query("SELECT Count(p) FROM Product p WHERE p.category.id = :categoryId")
     int countByCategoryId(@Param("categoryId") Long categoryId);
 

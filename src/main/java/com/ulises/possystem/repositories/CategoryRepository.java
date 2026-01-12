@@ -11,6 +11,11 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findByActiveTrue();
+
+    boolean existsByName(String name);
+
+    boolean existsByIdAndActiveTrue(Long id);
+
     @Modifying
     @Query("UPDATE Category category SET category.active = :active WHERE category.id = :id")
     void updateActivateStatus(@Param("id") Long id, @Param("active") boolean active);
