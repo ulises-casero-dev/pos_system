@@ -7,9 +7,9 @@ import com.ulises.possystem.entities.Category;
 import com.ulises.possystem.entities.Discount;
 import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.enums.DiscountType;
+import com.ulises.possystem.exception.business.DiscountTypeNotAllowedForProductException;
 import com.ulises.possystem.exception.business.InvalidDiscountScopeException;
-import com.ulises.possystem.exception.business.ProductInctiveException;
-import com.ulises.possystem.exception.validation.BadRequestException;
+import com.ulises.possystem.exception.business.ProductInactiveException;
 import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.repositories.CategoryRepository;
 import com.ulises.possystem.repositories.DiscountRepository;
@@ -72,13 +72,13 @@ public class DiscountServiceManager implements DiscountService{
     @Override
     public DiscountDTO save(DiscountCreateDTO createDto) {
         if (createDto.getProductId() != null && this.productRepository.existsByIdAndActiveFalse(createDto.getProductId())) {
-            throw new ProductInctiveException(createDto.getProductId());
+            throw new ProductInactiveException(createDto.getProductId());
         }
         else if (createDto.getDiscountType().equals(DiscountType.CUSTOMER) || createDto.getDiscountType().equals(DiscountType.EMPLOYEE) && createDto.getProductId() != null){
-            throw new InvalidDiscountScopeException();
+            throw new DiscountTypeNotAllowedForProductException();
         }
         else if (createDto.getDiscountType().equals(DiscountType.GENERAL) && createDto.getProductId() == null) {
-            // Error, si el descuento es general se debe aplicar sobre un producto
+            throw new InvalidDiscountScopeException();
         }
 
         Discount newDiscount = new Discount();

@@ -76,8 +76,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ProductInctiveException.class)
-    public ResponseEntity<ErrorResponse> hadleProductInctive(ProductInctiveException ex) {
+    @ExceptionHandler(ProductInactiveException.class)
+    public ResponseEntity<ErrorResponse> hadleProductInctive(ProductInactiveException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
@@ -95,6 +95,17 @@ public class GlobalExceptionHandler {
             LocalDateTime.now()
         );
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DiscountTypeNotAllowedForProductException.class)
+    public ResponseEntity<ErrorResponse> handleDiscountTypeNotAllowedForProduct(DiscountTypeNotAllowedForProductException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // Para errores generales
