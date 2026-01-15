@@ -6,6 +6,8 @@ import com.ulises.possystem.dto.user.UserDTO;
 import com.ulises.possystem.dto.user.UserUpdateDTO;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.UserType;
+import com.ulises.possystem.exception.business.emailAlreadyExistsException;
+import com.ulises.possystem.exception.business.userMemberIdentificationAlreadyExistsException;
 import com.ulises.possystem.exception.validation.BadRequestException;
 import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.repositories.UserRepository;
@@ -74,12 +76,12 @@ public class UserServiceManager implements UserService{
         user.setUserType(userDto.getUserType());
 
         if (this.repository.existsByEmail(userDto.getEmail())){
-            throw new BadRequestException("The email address is alredy in use");
+            throw new emailAlreadyExistsException(userDto.getEmail());
         }
         user.setEmail(userDto.getEmail());
 
         if (this.repository.existsByMemberIdentification(userDto.getIdentification())) {
-            throw new BadRequestException("The memeber identification alredy exists");
+            throw new userMemberIdentificationAlreadyExistsException(userDto.getIdentification());
         }
         user.setMemberIdentification(userDto.getIdentification());
 
