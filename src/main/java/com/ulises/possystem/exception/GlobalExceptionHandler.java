@@ -35,6 +35,16 @@ public class GlobalExceptionHandler {
     }
 
     // User Exceptions
+    @ExceptionHandler(UserInactiveException.class)
+    public ResponseEntity<ErrorResponse> handleUserInactive(UserInactiveException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(emailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(emailAlreadyExistsException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -55,7 +65,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // Category Errors
+    // Category Exceptions
     @ExceptionHandler(CategoryInUseException.class)
     public ResponseEntity<ErrorResponse> handleCategoryInUse(CategoryInUseException ex){
         ErrorResponse error = new ErrorResponse(
@@ -86,7 +96,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    //Products Errors
+    //Products Exceptions
     @ExceptionHandler(ProductAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleProductAlreadyExists (ProductAlreadyExistsException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -107,7 +117,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // Discount Errors
+    // Discount Exceptions
     @ExceptionHandler(InvalidDiscountScopeException.class)
     public ResponseEntity<ErrorResponse> hadleInvalidDiscountScope(InvalidDiscountScopeException ex){
         ErrorResponse error = new ErrorResponse(
@@ -126,6 +136,17 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
 
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // Order Exceptions
+    @ExceptionHandler(EmptyItemsOrderException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyItemsOrder(EmptyItemsOrderException ex) {
+        ErrorResponse error =new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

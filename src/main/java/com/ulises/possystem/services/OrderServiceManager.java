@@ -12,7 +12,10 @@ import com.ulises.possystem.entities.Product;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.DiscountType;
 import com.ulises.possystem.enums.OrderState;
+import com.ulises.possystem.exception.business.EmptyItemsOrderException;
 import com.ulises.possystem.exception.business.ProductInactiveException;
+import com.ulises.possystem.exception.business.UserInactiveException;
+import com.ulises.possystem.exception.business.userMemberIdentificationAlreadyExistsException;
 import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.helper.ItemsDiscountResult;
 import com.ulises.possystem.helper.UserDiscountResult;
@@ -137,6 +140,10 @@ public class OrderServiceManager implements OrderService {
 
         orderEntity.setDate(LocalDateTime.now());
 
+        if (orderCreateDto.getOrderItems().size() == 0) {
+            throw new EmptyItemsOrderException();
+        }
+
         ItemsDiscountResult itemsDiscountResult = applyItemsDiscunts(orderCreateDto, orderEntity);
 
         BigDecimal totalDiscount = BigDecimal.ZERO;
@@ -144,6 +151,10 @@ public class OrderServiceManager implements OrderService {
         if (orderCreateDto.getUserId() != null) {
             User user = this.userRepository.findById(orderCreateDto.getUserId())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+
+            if (this.userRepository.existsByMemberIdentificationAndActiveFalse(user.getMemberIdentification())){
+                throw new UserInactiveException(user.getMemberIdentification());
+            }
 
             orderEntity.setUser(user);
 
