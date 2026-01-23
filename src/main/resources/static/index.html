@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Self Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- ===== TABS ===== -->
+<div class="border-b border-gray-300">
+    <ul class="flex justify-center text-sm font-medium">
+        <li data-tab="user" class="px-6 py-4 border-b-2 border-blue-500 text-blue-600">User</li>
+        <li data-tab="checkout" class="px-6 py-4 text-gray-500">Self-checkout</li>
+        <li data-tab="admin" class="px-6 py-4 text-gray-400 cursor-not-allowed">Admin</li>
+    </ul>
+</div>
+
+<!-- ===== CONTENEDOR PRINCIPAL CENTRADO ===== -->
+<div class="flex justify-center mt-10">
+    <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">
+
+        <!-- ===== LOGIN ===== -->
+        <div id="tab-user" class="tab-content">
+            <div id="login-container" class="max-w-sm mx-auto mb-10">
+                <h2 class="text-xl font-semibold mb-4 text-center">Ingresar</h2>
+
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            Identificador de usuario
+                        </label>
+                        <input
+                                id="memberIdentification"
+                                type="text"
+                                minlength="8"
+                                maxlength="8"
+                                class="w-full border rounded px-3 py-2"
+                                required
+                        />
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                    >
+                        Ingresar
+                    </button>
+                </form>
+            </div>
+
+            <div id="logout-container" class="max-w-sm mx-auto mb-10">
+                <h2 class="text-xl font-semibold mb-4 text-center">Terminar Sesión</h2>
+                <button
+                    id="logoutBtn"
+                    type="button"
+                    class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== PRODUCTOS ===== -->
+        <div id="tab-checkout" class="tab-content hidden">
+
+            <!-- CONTENEDOR GENERAL CENTRADO -->
+            <div class="flex justify-center">
+                <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-md">
+
+                    <h2 class="text-xl font-semibold text-center mb-8">
+                        Self Checkout
+                    </h2>
+
+                    <!-- DOS COLUMNAS -->
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <!-- LISTA DE PRODUCTOS -->
+                        <div class="border rounded-lg p-4">
+                            <h3 class="text-lg font-medium text-center mb-4">
+                                Lista de productos
+                            </h3>
+
+                            <div class="h-80 overflow-y-auto border rounded">
+                                <ul id="productList" class="divide-y text-sm">
+                                    <!-- <li> se genera desde JS -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- PRODUCTOS SELECCIONADOS -->
+                        <div class="border rounded-lg p-4">
+                            <h3 class="text-lg font-medium text-center mb-4">
+                                Productos seleccionados
+                            </h3>
+
+                            <div class="h-80 overflow-y-auto border rounded">
+                                <ul id="cartList" class="divide-y text-sm">
+                                    <!-- items del carrito -->
+                                </ul>
+                            </div>
+
+                            <div class="mt-4 text-right font-semibold">
+                                Total: $<span id="totalAmount">0</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== ADMIN ===== -->
+        <div id="tab-admin" class="tab-content hidden">
+
+        </div>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/login.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.ulises.possystem.services;
 import com.ulises.possystem.discount.service.EmployeeDiscountUsageService;
 import com.ulises.possystem.dto.user.UserCreateDTO;
 import com.ulises.possystem.dto.user.UserDTO;
+import com.ulises.possystem.dto.user.UserLoginDTO;
 import com.ulises.possystem.dto.user.UserUpdateDTO;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.UserType;
@@ -29,6 +30,13 @@ public class UserServiceManager implements UserService{
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Override
+    public UserLoginDTO login(String memberIdentification){
+        User user = this.repository.findByMemberIdentification(memberIdentification)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return this.modelMapper.map(user, UserLoginDTO.class);
+    }
 
     @Override
     public List<UserDTO> findAll(){

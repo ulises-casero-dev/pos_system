@@ -1,7 +1,9 @@
 package com.ulises.possystem.controllers;
 
+import com.ulises.possystem.dto.LoginRequest;
 import com.ulises.possystem.dto.user.UserCreateDTO;
 import com.ulises.possystem.dto.user.UserDTO;
+import com.ulises.possystem.dto.user.UserLoginDTO;
 import com.ulises.possystem.dto.user.UserUpdateDTO;
 import com.ulises.possystem.services.UserServiceManager;
 import jakarta.validation.Valid;
@@ -21,6 +23,11 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         return  ResponseEntity.ok(this.serviceManager.findAll());
+    }
+
+    @PostMapping("/login")
+    public  ResponseEntity<UserLoginDTO> login(@RequestBody LoginRequest request){
+        return ResponseEntity.ok(this.serviceManager.login(request.getMemberIdentification()));
     }
 
     @GetMapping("/active")
