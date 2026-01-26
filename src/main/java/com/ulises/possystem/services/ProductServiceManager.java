@@ -38,6 +38,14 @@ public class ProductServiceManager implements ProductService{
     }
 
     @Override
+    public List<ProductDTO> findByActiveTrue() {
+        List<Product> products = productRepository.findByActiveTrue();
+        return products.stream()
+                .map(product -> this.modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ProductDTO findById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));;

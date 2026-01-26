@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const adminTab = document.getElementById("tab-admin");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // --- VISIBILIDAD LOGIN / LOGOUT ---
+    // --- LOGIN / LOGOUT ---
     if (user) {
         loginContainer.style.display = "none";
         logoutContainer.style.display = "block";

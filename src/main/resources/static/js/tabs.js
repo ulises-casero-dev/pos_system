@@ -6,18 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
         tab.addEventListener("click", () => {
             const selectedTab = tab.dataset.tab;
 
-            // 1️⃣ Ocultar todo el contenido
+            // 1️⃣ Ocultar todos los contenidos
             contents.forEach(content => {
                 content.classList.add("hidden");
             });
 
-            // 2️⃣ Mostrar el contenido del tab seleccionado
+            // 2️⃣ Mostrar el contenido activo
             const activeContent = document.getElementById(`tab-${selectedTab}`);
             if (activeContent) {
                 activeContent.classList.remove("hidden");
             }
 
-            // 3️⃣ Resetear estilos de todos los tabs
+            // 3️⃣ Resetear estilos
             tabs.forEach(t => {
                 t.classList.remove(
                     "border-b-2",
@@ -36,4 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
             tab.classList.remove("text-gray-500");
         });
     });
+
+    // Tab por defecto
+    const defaultTab = document.querySelector('[data-tab="user"]');
+    if (defaultTab) {
+        defaultTab.click();
+    }
 });

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductDTO> findAll();
+    List<ProductDTO> findByActiveTrue();
     ProductDTO findById(Long id);
     ProductDTO save(ProductCreateDTO productCreateDto);
     ProductDTO update(Long id, ProductUpdateDTO productDto);

@@ -164,6 +164,7 @@ public class OrderServiceManager implements OrderService {
             orderEntity.setTotalPrice(userDiscountResult.getTotalAfterUserDiscount());
 
         } else {
+            orderEntity.setUser(null);
             totalDiscount = itemsDiscountResult.getItemsDiscountAmount();
             orderEntity.setTotalPrice(itemsDiscountResult.getTotalAfterItemsDiscounts());
         }

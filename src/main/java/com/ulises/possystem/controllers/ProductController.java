@@ -23,6 +23,11 @@ public class ProductController {
         return ResponseEntity.ok(this.serviceManager.findAll());
     }
 
+    @GetMapping("/actives")
+    public ResponseEntity<List<ProductDTO>> findByActiveTrue() {
+        return ResponseEntity.ok(this.serviceManager.findByActiveTrue());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getByIdProduct(@PathVariable Long id){
         return ResponseEntity.ok(this.serviceManager.findById(id));

@@ -103,6 +103,12 @@
                             <div class="mt-4 text-right font-semibold">
                                 Total: $<span id="totalAmount">0</span>
                             </div>
+                            <button
+                                    id="confirmOrderBtn"
+                                    class="w-full mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                            >
+                                Confirmar compra
+                            </button>
                         </div>
 
                     </div>
@@ -114,6 +120,101 @@
         <!-- ===== ADMIN ===== -->
         <div id="tab-admin" class="tab-content hidden">
 
+            <div class="flex gap-6">
+
+                <!-- ===== SIDEBAR ===== -->
+                <div class="w-48 border rounded bg-gray-50">
+                    <ul class="divide-y text-sm">
+                        <li class="px-4 py-3 cursor-pointer hover:bg-gray-100"
+                            onclick="showAdminSection('products')">
+                            Productos
+                        </li>
+                        <li class="px-4 py-3 cursor-pointer hover:bg-gray-100"
+                            onclick="showAdminSection('users')">
+                            Usuarios
+                        </li>
+                        <li class="px-4 py-3 cursor-pointer hover:bg-gray-100"
+                            onclick="showAdminSection('discounts')">
+                            Descuentos
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- ===== CONTENIDO ===== -->
+                <div class="flex-1 border rounded p-6 bg-white max-h-[500px] overflow-y-auto">
+
+                <!-- === PRODUCTOS === -->
+                    <div id="admin-products" class="admin-section hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Productos</h2>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                                Add
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-6 gap-2 font-semibold text-sm border-b pb-2 mb-2">
+                            <span>ID</span>
+                            <span>Nombre</span>
+                            <span>Precio</span>
+                            <span>Categoría</span>
+                            <span>Activo</span>
+                            <span>Acciones</span>
+                        </div>
+
+                        <ul id="adminProductList" class="divide-y">
+                            <!-- filas desde JS -->
+                        </ul>
+                    </div>
+
+                    <!-- === USUARIOS === -->
+                    <div id="admin-users" class="admin-section hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Usuarios</h2>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                                Add
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-8 gap-2 font-semibold text-sm border-b pb-2 mb-2">
+                            <span>ID</span>
+                            <span>Nombre</span>
+                            <span>Apellido</span>
+                            <span>DNI</span>
+                            <span>Celular</span>
+                            <span>Email</span>
+                            <span>Tipo</span>
+                            <span>Activo</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <ul id="adminUserList" class="divide-y min-w-[1000px]"></ul>
+                        </div>
+
+                    </div>
+
+                    <!-- === DESCUENTOS === -->
+                    <div id="admin-discounts" class="admin-section hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Descuentos</h2>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                                Add
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-6 gap-2 font-semibold text-sm border-b pb-2 mb-2">
+                            <span>ID</span>
+                            <span>Tipo</span>
+                            <span>Producto</span>
+                            <span>Porcentaje</span>
+                            <span>Activo</span>
+                            <span>Acciones</span>
+                        </div>
+
+                        <ul id="adminDiscountList" class="divide-y"></ul>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -124,6 +225,7 @@
 <script src="js/ui.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
-
+<script src="js/orders.js"></script>
+<script src="js/admin.js"></script>
 </body>
 </html>
