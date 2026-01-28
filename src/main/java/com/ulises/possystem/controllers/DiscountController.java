@@ -41,13 +41,13 @@ public class DiscountController {
         return ResponseEntity.ok(this.serviceManager.patchDiscount(id, discountDto));
     }
 
-    @PutMapping("/deactivate/{id}")
+    @PatchMapping("/deactivate/{id}")
     public ResponseEntity<ApiMessage> deactivateDiscount(@PathVariable Long id) {
         this.serviceManager.deactivateDiscount(id);
         return ResponseEntity.ok(new ApiMessage("Discount deactivation **successful**"));
     }
 
-    @PutMapping("/activate/{id}")
+    @PatchMapping("/activate/{id}")
     public ResponseEntity<ApiMessage> activateDiscount(@PathVariable Long id) {
         this.serviceManager.activateDiscount(id);
         return ResponseEntity.ok(new ApiMessage("Discount activation **successful**"));

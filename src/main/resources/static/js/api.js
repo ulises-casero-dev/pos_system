@@ -1,5 +1,3 @@
-
-console.log("api.js cargado");
 const API_BASE_URL = "http://localhost:8080/api";
 
 async function getProducts() {

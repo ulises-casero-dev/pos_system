@@ -147,7 +147,7 @@
                     <div id="admin-products" class="admin-section hidden">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-lg font-semibold">Productos</h2>
-                            <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded" onclick="openCreateProductModal()">
                                 Add
                             </button>
                         </div>
@@ -170,35 +170,36 @@
                     <div id="admin-users" class="admin-section hidden">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-lg font-semibold">Usuarios</h2>
-                            <button class="bg-blue-600 text-white px-4 py-2 rounded">
-                                Add
-                            </button>
-                        </div>
-
-                        <div class="grid grid-cols-8 gap-2 font-semibold text-sm border-b pb-2 mb-2">
-                            <span>ID</span>
-                            <span>Nombre</span>
-                            <span>Apellido</span>
-                            <span>DNI</span>
-                            <span>Celular</span>
-                            <span>Email</span>
-                            <span>Tipo</span>
-                            <span>Activo</span>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded"
+                                    onclick="openCreateUserModal()">Add</button>
                         </div>
 
                         <div class="overflow-x-auto">
-                            <ul id="adminUserList" class="divide-y min-w-[1000px]"></ul>
-                        </div>
+                            <div class="min-w-[1000px]">
 
+                                <div class="grid grid-cols-9 gap-2 font-semibold text-sm border-b pb-2 mb-2">
+                                    <span>ID</span>
+                                    <span>Nombre</span>
+                                    <span>Apellido</span>
+                                    <span>DNI</span>
+                                    <span>Celular</span>
+                                    <span>Email</span>
+                                    <span>Tipo</span>
+                                    <span>Activo</span>
+                                    <span>Acciones</span>
+                                </div>
+
+                                <ul id="adminUserList" class="divide-y"></ul>
+
+                            </div>
+                        </div>
                     </div>
 
                     <!-- === DESCUENTOS === -->
                     <div id="admin-discounts" class="admin-section hidden">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-lg font-semibold">Descuentos</h2>
-                            <button class="bg-blue-600 text-white px-4 py-2 rounded">
-                                Add
-                            </button>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded" onclick="openCreateDiscountModal()">Add</button>
                         </div>
 
                         <div class="grid grid-cols-6 gap-2 font-semibold text-sm border-b pb-2 mb-2">
@@ -218,6 +219,107 @@
         </div>
     </div>
 </div>
+
+<!-- ===== MODAL PRODUCTO ===== -->
+<div id="productModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white p-6 rounded w-96">
+        <h2 id="modalTitle" class="text-lg font-semibold mb-4"></h2>
+
+        <form id="productForm" class="space-y-3">
+            <input type="hidden" id="productId">
+
+            <input id="productName" class="w-full border p-2" placeholder="Nombre" required>
+            <input id="productPrice" type="number" class="w-full border p-2" placeholder="Precio" required>
+            <select id="productCategory" required>
+                <option value="">Seleccione categoría</option>
+            </select>
+
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                        onclick="closeProductModal()"
+                        class="px-4 py-2 border rounded">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== MODAL USUARIO ===== -->
+<div id="userModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white p-6 rounded w-96">
+        <h2 id="userModalTitle" class="text-lg font-semibold mb-4"></h2>
+
+        <form id="userForm" class="space-y-3">
+            <input type="hidden" id="userId">
+
+            <input id="userName" class="w-full border p-2" placeholder="Nombre" required>
+            <input id="userSurname" class="w-full border p-2" placeholder="Apellido" required>
+            <input id="userEmail" type="email" class="w-full border p-2" placeholder="Email" required>
+            <input id="userCi" class="w-full border p-2" placeholder="CI" required>
+
+            <select id="userType" class="w-full border p-2" required>
+                <option value="">Seleccione tipo</option>
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="CUSTOMER">CUSTOMER</option>
+            </select>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeUserModal()" class="border px-4 py-2 rounded">
+                    Cancelar
+                </button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== MODAL DESCUENTO ===== -->
+<div id="discountModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white p-6 rounded w-96">
+        <h2 id="discountModalTitle" class="text-lg font-semibold mb-4"></h2>
+
+        <form id="discountForm" class="space-y-3">
+            <input type="hidden" id="discountId">
+
+            <input id="discountDescription" class="w-full border p-2" placeholder="Descripción" required>
+            <input id="discountAmount" type="number" class="w-full border p-2" placeholder="Monto" required>
+
+            <select id="discountType" class="w-full border p-2" required>
+                <option value="">Tipo de descuento</option>
+                <option value="GENERAL">GENERAL</option>
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="CUSTOMER">CUSTOMER</option>
+            </select>
+
+            <input id="discountLimitAmount" type="number" class="w-full border p-2" placeholder="Monto límite">
+
+            <input id="discountProductId" type="number" class="w-full border p-2" placeholder="Product Id">
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeDiscountModal()" class="border px-4 py-2 rounded">
+                    Cancelar
+                </button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <script src="js/api.js"></script>
 <script src="js/tabs.js"></script>

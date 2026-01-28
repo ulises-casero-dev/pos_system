@@ -13,6 +13,7 @@ public class DiscountDTO {
     private BigDecimal amount;
     private BigDecimal limitAmount;
     private DiscountType discountType;
+    private boolean active;
     private Long categoryId;
     private Long productId;
 
@@ -56,6 +57,14 @@ public class DiscountDTO {
 
     public void setLimitAmount(BigDecimal limitAmount) {
         this.limitAmount = limitAmount;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Long getCategoryId() {

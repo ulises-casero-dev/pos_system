@@ -46,13 +46,13 @@ public class ProductController {
         return ResponseEntity.ok(productDto);
     }
 
-    @PutMapping("activate/{id}")
+    @PatchMapping("activate/{id}")
     public ResponseEntity<ProductDTO> activate(@PathVariable Long id) {
         ProductDTO activatedProduct = this.serviceManager.activate(id);
         return  ResponseEntity.ok(activatedProduct);
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("deactivate/{id}")
     public ResponseEntity<ProductDTO> delete(@PathVariable Long id){
         ProductDTO deletedProduct = this.serviceManager.deactivate(id);
         return  ResponseEntity.ok(deletedProduct);
