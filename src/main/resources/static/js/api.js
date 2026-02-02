@@ -55,4 +55,10 @@ async function getAllDiscounts() {
     return response.json();
 }
 
+async function getAllCategories() {
+    const response = await fetch(`${API_BASE_URL}/categories`);
+    if (!response.ok) throw new Error("Error al obtener categorias");
+    return response.json();
+}
+
 

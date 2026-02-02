@@ -41,6 +41,7 @@ function showAdminSection(section) {
     if (section === "products") loadAdminProducts();
     if (section === "users") loadAdminUsers();
     if (section === "discounts") loadAdminDiscounts();
+    if (section === "categories") loadAdminCategories();
 }
 
 function initAdmin() {
@@ -148,7 +149,7 @@ async function loadAdminUsers() {
 
     users.forEach(u => {
         const li = document.createElement("li");
-        li.className = "grid grid-cols-9 gap-2 p-2 text-sm";
+        li.className = "grid grid-cols-[60px_1fr_1fr_1fr_1fr_2fr_1fr_80px_120px] gap-2 p-2 text-sm items-center";
 
         li.innerHTML = `
             <span>${u.id}</span>
@@ -156,7 +157,9 @@ async function loadAdminUsers() {
             <span>${u.surname}</span>
             <span>${u.memberIdentification}</span>
             <span>${u.celphone}</span>
-            <span>${u.email}</span>
+            <span class="truncate overflow-hidden whitespace-nowrap">
+                ${u.email ?? "-"}
+            </span>
             <span>${u.type}</span>
             <span>${u.active ? "✔️" : "❌"}</span>
             <div class="flex gap-2">
@@ -180,6 +183,11 @@ function openCreateUserModal() {
     document.getElementById("userModalTitle").textContent = "Nuevo usuario";
     userForm.reset();
     document.getElementById("userId").value = "";
+
+    const ciInput = document.getElementById("userCi");
+    ciInput.disabled = false;
+    ciInput.required = true;
+
     userModal.classList.remove("hidden");
 }
 
@@ -187,14 +195,26 @@ function openEditUserModal(user) {
     document.getElementById("userModalTitle").textContent = "Editar usuario";
 
     userId.value = user.id;
+
     userName.value = user.name;
     userSurname.value = user.surname;
     userEmail.value = user.email;
+    userPhone.value = user.celphone ?? "";
     userCi.value = user.memberIdentification;
     userType.value = user.type;
 
+    const ciInput = document.getElementById("userCi");
+    ciInput.disabled = true;
+    ciInput.required = false;
+
+    document.getElementById("userName").required = false;
+    document.getElementById("userSurname").required = false;
+    document.getElementById("userEmail").required = false;
+    document.getElementById("userType").required = false;
+
     userModal.classList.remove("hidden");
 }
+
 
 function closeUserModal() {
     userModal.classList.add("hidden");
@@ -209,6 +229,7 @@ userForm.addEventListener("submit", async e => {
         name: userName.value,
         surname: userSurname.value,
         email: userEmail.value,
+        celphone: userPhone.value,
         identification: userCi.value,
         userType: userType.value
     };
@@ -219,11 +240,21 @@ userForm.addEventListener("submit", async e => {
 
     const method = id ? "PUT" : "POST";
 
-    await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+    try {
+        await apiFetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        console.log(typeof apiFetch);
+
+        closeUserModal();
+        loadAdminUsers();
+
+    } catch (error) {
+        alert(error.message);
+    }
 
     closeUserModal();
     loadAdminUsers();
@@ -336,4 +367,93 @@ discountForm.addEventListener("submit", async (e) => {
 
     closeDiscountModal();
     loadAdminDiscounts();
+});
+
+// Categories
+async function loadAdminCategories() {
+    const list = document.getElementById("adminCategoryList");
+    list.innerHTML = "";
+
+    const categories = await getAllCategories();
+
+    categories.forEach(c => {
+        const li = document.createElement("li");
+        li.className = "grid grid-cols-6 gap-2 p-2 text-sm";
+
+        li.innerHTML = `
+            <span>${c.id}</span>
+            <span>${c.name}</span>
+            <span>${c.active ? "✔️" : "❌"}</span>
+            <div class="flex gap-2">
+                <a href="#" class="text-blue-600" onclick='openEditCategoryModal(${JSON.stringify(c)})'>Edit</a>
+                ${
+                    c.active
+                        ? `<button class="text-red-600" onclick="deactivateCategory(${c.id})">Delete</button>`
+                        : `<button class="text-green-600" onclick="activateCategory(${c.id})">Activate</button>`
+                }
+            </div>
+        `;
+
+
+        list.appendChild(li);
+    });
+}
+
+const categoryModal = document.getElementById("categoryModal");
+const categoryForm = document.getElementById("categoryForm");
+const categoryModalTitle = document.getElementById("categoryModalTitle");
+
+function openCreateCategoryModal(category) {
+    categoryModalTitle.textContent = "Nueva categoría";
+    categoryForm.reset();
+    document.getElementById("categoryId").value = "";
+    categoryModal.classList.remove("hidden");
+}
+
+function openEditCategoryModal(category) {
+    discountModalTitle.textContent = "Editar categoría";
+
+    document.getElementById("categoryName").value = category.name;
+
+    categoryModal.classList.remove("hidden");
+}
+
+function closeCategoryModal() {
+    categoryModal.classList.add("hidden");
+}
+
+async function deactivateCategory(id) {
+    await fetch(`${API_BASE_URL}/categories/deactivate/${id}`, { method: "PATCH" });
+    loadAdminCategories();
+}
+
+async function activateCategory(id) {
+    await fetch(`${API_BASE_URL}/categories/activate/${id}`, { method: "PATCH" });
+    loadAdminCategories();
+}
+
+categoryForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById("categoryId").value;
+
+    const payload = {
+        name: document.getElementById("categoryName").value,
+
+    };
+
+    const url = id
+        ? `${API_BASE_URL}/categories/${id}`
+        : `${API_BASE_URL}/categories`;
+
+    const method = id ? "PATCH" : "POST";
+
+    await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    closeCategoryModal();
+    loadAdminCategories();
 });

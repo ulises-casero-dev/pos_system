@@ -22,6 +22,7 @@ public class UserCreateDTO {
     private String phone;
 
     @NotNull(message = "The identification can't be null.")
+    @Size(min = 8, max = 8, message = "El campo debe tener exactamente 8 caracteres")
     private String identification;
 
     @NotNull(message = "The userType can't be null.")

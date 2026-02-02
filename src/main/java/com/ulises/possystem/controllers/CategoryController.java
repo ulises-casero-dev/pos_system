@@ -39,20 +39,20 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryDto);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id,
                                             @Valid @RequestBody CategoryDTO category){
         CategoryDTO categoryDto = this.serviceManager.update(id, category);
         return ResponseEntity.ok(categoryDto);
     }
 
-    @PutMapping("/activate/{id}")
+    @PatchMapping("/activate/{id}")
     public ResponseEntity<ApiMessage> activateCategory(@PathVariable Long id) {
         this.serviceManager.activate(id);
         return ResponseEntity.ok(new ApiMessage("Category activation **successful**"));
     }
 
-    @PutMapping("/deactivate/{id}")
+    @PatchMapping("/deactivate/{id}")
     public ResponseEntity<ApiMessage> deactivateCategory(@PathVariable Long id){
         this.serviceManager.deactivate(id);
         return ResponseEntity.ok(new ApiMessage("Category deactivation **successful**"));

@@ -24,4 +24,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     int countByCategoryId(@Param("categoryId") Long categoryId);
 
 
-} // Esta interface generara las consultas sql necesarias para el manejo de datos, si quisiera crear consultas personalizadas debo hacerlo dentro de las llaves {}
+}

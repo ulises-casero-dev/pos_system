@@ -82,9 +82,13 @@ public class ProductServiceManager implements ProductService{
         Product productEntity = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
+        if (productDto.getName() != null) {
+            productEntity.setName(productDto.getName());
+        }
 
-        productEntity.setName(productDto.getName());
-        productEntity.setPrice(productDto.getPrice());
+        if (productDto.getPrice() != null) {
+            productEntity.setPrice(productDto.getPrice());
+        }
 
         if (productDto.getCategoryId() != null) {
             Category category = this.categoryRepository.findById(productDto.getCategoryId())
@@ -92,7 +96,6 @@ public class ProductServiceManager implements ProductService{
 
             productEntity.setCategory(category);
         }
-
 
        Product saveProduct = this.productRepository.save(productEntity);
        return this.modelMapper.map(saveProduct, ProductDTO.class);

@@ -37,7 +37,7 @@ public class DiscountController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<DiscountDTO> updateDiscount(@PathVariable Long id,
-                                                      @RequestBody DiscountUpdateDTO discountDto) {
+                                                      @Valid @RequestBody DiscountUpdateDTO discountDto) {
         return ResponseEntity.ok(this.serviceManager.patchDiscount(id, discountDto));
     }
 

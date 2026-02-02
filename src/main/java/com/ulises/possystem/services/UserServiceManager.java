@@ -7,6 +7,7 @@ import com.ulises.possystem.dto.user.UserLoginDTO;
 import com.ulises.possystem.dto.user.UserUpdateDTO;
 import com.ulises.possystem.entities.User;
 import com.ulises.possystem.enums.UserType;
+import com.ulises.possystem.exception.business.UserInactiveException;
 import com.ulises.possystem.exception.business.emailAlreadyExistsException;
 import com.ulises.possystem.exception.business.userMemberIdentificationAlreadyExistsException;
 import com.ulises.possystem.exception.validation.BadRequestException;
@@ -35,7 +36,13 @@ public class UserServiceManager implements UserService{
     public UserLoginDTO login(String memberIdentification){
         User user = this.repository.findByMemberIdentification(memberIdentification)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return this.modelMapper.map(user, UserLoginDTO.class);
+
+        if (user.isActive()) {
+            return this.modelMapper.map(user, UserLoginDTO.class);
+        }
+        else {
+            throw new UserInactiveException(user.getMemberIdentification());
+        }
     }
 
     @Override
@@ -107,10 +114,21 @@ public class UserServiceManager implements UserService{
         User userEntity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
-        userEntity.setName(userDto.getName());
-        userEntity.setSurname(userDto.getSurname());
-        userEntity.setEmail(userDto.getEmail());
-        userEntity.setCelphone(userDto.getPhone());
+        if (userDto.getEmail() != null && !userEntity.getEmail().equals(userDto.getEmail()) && this.repository.existsByEmail(userDto.getEmail())){
+            throw new emailAlreadyExistsException(userDto.getEmail());
+        }
+        if(userDto.getName() != null) {
+            userEntity.setName(userDto.getName());
+        }
+        if(userDto.getSurname() != null) {
+            userEntity.setSurname(userDto.getSurname());
+        }
+        if(userDto.getEmail() != null) {
+            userEntity.setEmail(userDto.getEmail());
+        }
+        if(userDto.getPhone() != null) {
+            userEntity.setCelphone(userDto.getPhone());
+        }
 
         User updatedUser = repository.save(userEntity);
         return  modelMapper.map(updatedUser, UserDTO.class);
