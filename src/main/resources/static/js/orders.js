@@ -16,8 +16,6 @@ async function createOrder() {
     };
 
     try {
-        console.log("Payload enviado:", JSON.stringify(payload, null, 2));
-
         const response = await fetch("http://localhost:8080/api/orders", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

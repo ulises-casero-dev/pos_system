@@ -10,7 +10,6 @@ import com.ulises.possystem.enums.UserType;
 import com.ulises.possystem.exception.business.UserInactiveException;
 import com.ulises.possystem.exception.business.emailAlreadyExistsException;
 import com.ulises.possystem.exception.business.userMemberIdentificationAlreadyExistsException;
-import com.ulises.possystem.exception.validation.BadRequestException;
 import com.ulises.possystem.exception.notFound.ResourceNotFoundException;
 import com.ulises.possystem.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -34,7 +33,9 @@ public class UserServiceManager implements UserService{
 
     @Override
     public UserLoginDTO login(String memberIdentification){
-        User user = this.repository.findByMemberIdentification(memberIdentification)
+        String cleanIdentification = memberIdentification.trim();
+
+        User user = this.repository.findByMemberIdentification(cleanIdentification)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (user.isActive()) {
@@ -98,7 +99,7 @@ public class UserServiceManager implements UserService{
         if (this.repository.existsByMemberIdentification(userDto.getIdentification())) {
             throw new userMemberIdentificationAlreadyExistsException(userDto.getIdentification());
         }
-        user.setMemberIdentification(userDto.getIdentification());
+        user.setMemberIdentification(userDto.getIdentification().trim());
 
         User savedUser = this.repository.save(user);
 

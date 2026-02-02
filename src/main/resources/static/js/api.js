@@ -16,6 +16,8 @@ async function getSession() {
 
 async function login(memberIdentification) {
     try {
+        memberIdentification = memberIdentification.trim();
+
         const response = await fetch(`${API_BASE_URL}/users/login`, {
                 method: "POST",
                 headers: {
@@ -25,9 +27,18 @@ async function login(memberIdentification) {
             });
 
             if (!response.ok) {
-                alert("Usuario no encontrado");
+                const error = await response.json();
+
+                if (response.status === 400) {
+                    alert(error.message);
+                } else if (response.status === 404) {
+                    alert("Usuario no encontrado");
+                } else {
+                    alert("Error inesperado");
+                }
                 return;
             }
+
 
             return response.json();
 

@@ -1,36 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("productForm");
-    if (!form) return;
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const id = document.getElementById("productId").value;
-        const categoryValue = document.getElementById("productCategory").value;
-
-        const payload = {
-            name: document.getElementById("productName").value,
-            price: document.getElementById("productPrice").value,
-            categoryId: categoryValue ? Number(categoryValue) : null
-        };
-
-        const url = id
-            ? `${API_BASE_URL}/products/${id}`
-            : `${API_BASE_URL}/products`;
-
-        const method = id ? "PUT" : "POST";
-
-        await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        closeProductModal();
-        loadAdminProducts();
-    });
-});
-
 function showAdminSection(section) {
     document.querySelectorAll(".admin-section")
         .forEach(div => div.classList.add("hidden"));
@@ -51,6 +18,53 @@ function initAdmin() {
 
 
 // Produtcs
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("productForm");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById("productId").value;
+        const categoryValue = document.getElementById("productCategory").value;
+
+        const payload = {
+            name: document.getElementById("productName").value,
+            price: document.getElementById("productPrice").value
+        };
+
+        if (categoryValue) {
+            payload.categoryId = Number(categoryValue);
+        }
+
+        const url = id
+            ? `${API_BASE_URL}/products/${id}`
+            : `${API_BASE_URL}/products`;
+
+        const method = id ? "PATCH" : "POST";
+
+        try {
+            await apiFetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            console.log(typeof apiFetch);
+
+            closeProductModal();
+            loadAdminProducts();
+
+        } catch (error) {
+            alert(error.message);
+        }
+
+        closeProductModal();
+        loadAdminProducts();
+
+    });
+});
+
 async function loadAdminProducts() {
     const list = document.getElementById("adminProductList");
     list.innerHTML = "";
@@ -100,7 +114,6 @@ function openEditProductModal(product) {
     document.getElementById("productId").value = product.id;
     document.getElementById("productName").value = product.name;
     document.getElementById("productPrice").value = product.price;
-    //document.getElementById("productActive").checked = product.active;
 
     const categorySelect = document.getElementById("productCategory");
         categorySelect.required = false;
@@ -130,13 +143,31 @@ async function loadCategories() {
 }
 
 async function deactivateProduct(id) {
-    await fetch(`${API_BASE_URL}/products/deactivate/${id}`, { method: "PATCH" });
-    loadAdminProducts();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/products/deactivate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 async function activateProduct(id) {
-    await fetch(`${API_BASE_URL}/products/activate/${id}`, { method: "PATCH" });
-    loadAdminProducts();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/products/activate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 
@@ -261,13 +292,31 @@ userForm.addEventListener("submit", async e => {
 });
 
 async function deactivateUser(id) {
-    await fetch(`${API_BASE_URL}/users/deactivate/${id}`, { method: "PATCH" });
-    loadAdminUsers();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/users/deactivate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 async function activateUser(id) {
-    await fetch(`${API_BASE_URL}/users/activate/${id}`, { method: "PATCH" });
-    loadAdminUsers();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/users/activate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 // Discounts
@@ -331,13 +380,31 @@ function closeDiscountModal() {
 }
 
 async function deactivateDiscount(id) {
-    await fetch(`${API_BASE_URL}/discounts/deactivate/${id}`, { method: "PATCH" });
-    loadAdminDiscounts();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/discounts/deactivate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 async function activateDiscount(id) {
-    await fetch(`${API_BASE_URL}/discounts/activate/${id}`, { method: "PATCH" });
-    loadAdminDiscounts();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/discounts/activate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 discountForm.addEventListener("submit", async (e) => {
@@ -359,11 +426,21 @@ discountForm.addEventListener("submit", async (e) => {
 
     const method = id ? "PATCH" : "POST";
 
-    await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+    try {
+        await apiFetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        console.log(typeof apiFetch);
+
+        closeDiscountModal();
+        loadAdminDiscounts();
+
+    } catch (error) {
+        alert(error.message);
+    }
 
     closeDiscountModal();
     loadAdminDiscounts();
@@ -403,18 +480,17 @@ const categoryModal = document.getElementById("categoryModal");
 const categoryForm = document.getElementById("categoryForm");
 const categoryModalTitle = document.getElementById("categoryModalTitle");
 
-function openCreateCategoryModal(category) {
+function openCreateCategoryModal() {
     categoryModalTitle.textContent = "Nueva categoría";
     categoryForm.reset();
     document.getElementById("categoryId").value = "";
     categoryModal.classList.remove("hidden");
 }
 
+
 function openEditCategoryModal(category) {
-    discountModalTitle.textContent = "Editar categoría";
-
+    categoryModalTitle.textContent = "Editar categoría";
     document.getElementById("categoryName").value = category.name;
-
     categoryModal.classList.remove("hidden");
 }
 
@@ -423,13 +499,32 @@ function closeCategoryModal() {
 }
 
 async function deactivateCategory(id) {
-    await fetch(`${API_BASE_URL}/categories/deactivate/${id}`, { method: "PATCH" });
-    loadAdminCategories();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/categories/deactivate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
+
 async function activateCategory(id) {
-    await fetch(`${API_BASE_URL}/categories/activate/${id}`, { method: "PATCH" });
-    loadAdminCategories();
+    try {
+        await apiFetch(
+            `${API_BASE_URL}/categories/activate/${id}`,
+            { method: "PATCH" }
+        );
+
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 categoryForm.addEventListener("submit", async (e) => {
@@ -448,11 +543,21 @@ categoryForm.addEventListener("submit", async (e) => {
 
     const method = id ? "PATCH" : "POST";
 
-    await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+    try {
+        await apiFetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        console.log(typeof apiFetch);
+
+        closeCategoryModal();
+        loadAdminCategories();
+
+    } catch (error) {
+        alert(error.message);
+    }
 
     closeCategoryModal();
     loadAdminCategories();
