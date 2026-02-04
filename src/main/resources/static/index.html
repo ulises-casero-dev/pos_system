@@ -181,7 +181,7 @@
                             <div class="min-w-[1000px]">
 
                                 <div class="grid grid-cols-[60px_1fr_1fr_1fr_1fr_2fr_1fr_80px_120px] gap-2 font-semibold text-sm border-b pb-2 mb-2">
-                                <span>ID</span>
+                                    <span>ID</span>
                                     <span>Nombre</span>
                                     <span>Apellido</span>
                                     <span>DNI</span>
@@ -205,16 +205,24 @@
                             <button class="bg-blue-600 text-white px-4 py-2 rounded" onclick="openCreateDiscountModal()">Add</button>
                         </div>
 
-                        <div class="grid grid-cols-6 gap-2 font-semibold text-sm border-b pb-2 mb-2">
-                            <span>ID</span>
-                            <span>Tipo</span>
-                            <span>Producto</span>
-                            <span>Porcentaje</span>
-                            <span>Activo</span>
-                            <span>Acciones</span>
-                        </div>
+                        <div class="overflow-x-auto">
+                            <div class="min-w-[1000px]">
 
-                        <ul id="adminDiscountList" class="divide-y"></ul>
+                                <div class="grid grid-cols-[60px_2fr_1fr_1fr_1fr_1fr_80px_120px] gap-2 font-semibold text-sm border-b pb-2 mb-2">
+                                    <span>ID</span>
+                                    <span>Descripción</span>
+                                    <span>Tipo</span>
+                                    <span>Producto</span>
+                                    <span>Porcentaje</span>
+                                    <span>Monto límite</span>
+                                    <span>Activo</span>
+                                    <span>Acciones</span>
+                                </div>
+
+                                <ul id="adminDiscountList" class="divide-y"></ul>
+
+                            </div>
+                        </div>
                     </div>
 
                     <!-- === CATEGORIAS === -->

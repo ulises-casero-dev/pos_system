@@ -58,10 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             alert(error.message);
         }
-
-        closeProductModal();
-        loadAdminProducts();
-
     });
 });
 
@@ -286,9 +282,6 @@ userForm.addEventListener("submit", async e => {
     } catch (error) {
         alert(error.message);
     }
-
-    closeUserModal();
-    loadAdminUsers();
 });
 
 async function deactivateUser(id) {
@@ -298,7 +291,7 @@ async function deactivateUser(id) {
             { method: "PATCH" }
         );
 
-        loadAdminCategories();
+        loadAdminUsers();
 
     } catch (error) {
         alert(error.message);
@@ -312,7 +305,7 @@ async function activateUser(id) {
             { method: "PATCH" }
         );
 
-        loadAdminCategories();
+        loadAdminUsers();
 
     } catch (error) {
         alert(error.message);
@@ -328,13 +321,17 @@ async function loadAdminDiscounts() {
 
     discounts.forEach(d => {
         const li = document.createElement("li");
-        li.className = "grid grid-cols-6 gap-2 p-2 text-sm";
+        li.className = "grid grid-cols-[60px_2fr_1fr_1fr_1fr_1fr_80px_120px] gap-2 text-sm border-b pb-2 mb-2 items-center";
 
         li.innerHTML = `
             <span>${d.id}</span>
+            <span class="truncate overflow-hidden whitespace-nowrap">
+                ${d.description}
+            </span>
             <span>${d.discountType}</span>
             <span>${d.productId ?? "-"}</span>
             <span>${d.amount}</span>
+            <span>${d.limitAmount}</span>
             <span>${d.active ? "✔️" : "❌"}</span>
             <div class="flex gap-2">
                 <a href="#" class="text-blue-600" onclick='openEditDiscountModal(${JSON.stringify(d)})'>Edit</a>
@@ -386,7 +383,7 @@ async function deactivateDiscount(id) {
             { method: "PATCH" }
         );
 
-        loadAdminCategories();
+        loadAdminDiscounts();
 
     } catch (error) {
         alert(error.message);
@@ -400,7 +397,7 @@ async function activateDiscount(id) {
             { method: "PATCH" }
         );
 
-        loadAdminCategories();
+        loadAdminDiscounts();
 
     } catch (error) {
         alert(error.message);
@@ -417,8 +414,13 @@ discountForm.addEventListener("submit", async (e) => {
         amount: document.getElementById("discountAmount").value,
         discountType: document.getElementById("discountType").value,
         limitAmount: document.getElementById("discountLimitAmount").value || null,
-        productId: document.getElementById("discountProductId").value || null
     };
+
+    if (productIdValue !== "") {
+        payload.productId = Number(productIdValue);
+    }
+
+    console.log("Payload enviado:", payload);
 
     const url = id
         ? `${API_BASE_URL}/discounts/${id}`
@@ -433,17 +435,12 @@ discountForm.addEventListener("submit", async (e) => {
             body: JSON.stringify(payload)
         });
 
-        console.log(typeof apiFetch);
-
         closeDiscountModal();
         loadAdminDiscounts();
 
     } catch (error) {
         alert(error.message);
     }
-
-    closeDiscountModal();
-    loadAdminDiscounts();
 });
 
 // Categories
@@ -558,7 +555,4 @@ categoryForm.addEventListener("submit", async (e) => {
     } catch (error) {
         alert(error.message);
     }
-
-    closeCategoryModal();
-    loadAdminCategories();
 });

@@ -71,10 +71,13 @@ public class DiscountServiceManager implements DiscountService{
 
     @Override
     public DiscountDTO save(DiscountCreateDTO createDto) {
+
+        System.out.println("DTO productId: " + createDto.getProductId());
+
         if (createDto.getProductId() != null && this.productRepository.existsByIdAndActiveFalse(createDto.getProductId())) {
             throw new ProductInactiveException(createDto.getProductId());
         }
-        else if (createDto.getDiscountType().equals(DiscountType.CUSTOMER) || createDto.getDiscountType().equals(DiscountType.EMPLOYEE) && createDto.getProductId() != null){
+        else if ((createDto.getDiscountType().equals(DiscountType.CUSTOMER) || createDto.getDiscountType().equals(DiscountType.EMPLOYEE)) && createDto.getProductId() != null){
             throw new DiscountTypeNotAllowedForProductException();
         }
         else if (createDto.getDiscountType().equals(DiscountType.GENERAL) && createDto.getProductId() == null) {

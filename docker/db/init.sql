@@ -8,14 +8,21 @@ INSERT INTO categories (name, active)
 VALUES
     ('Bebidas', true),
     ('Comida', true),
-    ('Limpieza', true)
+    ('Limpieza', true),
+    ('Electrónica', true),
+    ('Librería', true),
+    ('Vestimenta', true),
+    ('Ferretería', true),
+    ('Papelería', true),
+    ('Deporte', true),
+    ('Panadería', true)
 ON CONFLICT DO NOTHING;
 
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     active BOOLEAN,
-    celphone VARCHAR(255),
+    cellphone VARCHAR(255),
     email VARCHAR(255),
     member_identification VARCHAR(255),
     name VARCHAR(255),
@@ -23,10 +30,11 @@ CREATE TABLE IF NOT EXISTS users (
     user_type VARCHAR(255) NOT NULL
 );
 
-INSERT INTO users (active, member_identification, name, surname, user_type)
+INSERT INTO users (active, member_identification, name, surname, cellphone, email, user_type)
 VALUES
-    (true, '12345678', 'Admin', 'Sistema', 'EMPLOYEE'),
-    (true, '87654321', 'Cliente', 'Prueba', 'CUSTOMER')
+    (true, '00000000', 'Admin', 'Sistema', '000000000', 'admin@example.com', 'ADMIN'),
+    (true, '12345678', 'Empleado', 'Sistema', '123456789', 'employee@example.com','EMPLOYEE'),
+    (true, '87654321', 'Cliente', 'Prueba', '987654321', 'customer@example.com', 'CUSTOMER')
 ON CONFLICT DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS products (
@@ -41,7 +49,7 @@ CREATE TABLE IF NOT EXISTS products (
 
 INSERT INTO products (name, price, category_id, active)
 VALUES
-    ('Coca Cola 1L', 120.00, 1, true),
+    ('Refresco 1L', 120.00, 1, true),
     ('Hamburguesa', 250.00, 2, true),
     ('Detergente', 180.00, 3, true)
 ON CONFLICT DO NOTHING;
@@ -63,9 +71,9 @@ CREATE TABLE IF NOT EXISTS discounts (
         FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-INSERT INTO discounts (active, amount, description, discount_type)
+INSERT INTO discounts (active, amount, description, discount_type, product_id)
 VALUES
-    (true, 10, 'Descuento general', 'GENERAL')
+    (true, 10, 'Descuento general', 'GENERAL', 2)
 ON CONFLICT DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS orders (
