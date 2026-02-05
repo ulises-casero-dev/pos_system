@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ulises.posmarket</groupId>
-	<artifactId>pos_system</artifactId>
+	<artifactId>self-checkout-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pos_system</name>
+	<name>self-checkout-system</name>
 	<description>Backend para sistema POS de comercio para portfolio</description>
 	<url/>
 	<licenses>
