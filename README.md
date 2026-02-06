@@ -52,6 +52,12 @@ This project is part of my personal portfolio, with an emphasis on **backend arc
 
 ---
 
+### 🖥️ Minimal Frontend
+- The project includes a minimal frontend layer to interact with the backend API
+- Used mainly for testing and manual interaction with core features
+- Not intended as a full-featured user interface
+
+---
 ## 🐳 Docker Support
 
 The project can be run using **Docker Compose**, including:
